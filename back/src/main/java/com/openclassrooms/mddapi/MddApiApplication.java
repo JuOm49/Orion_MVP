@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class MddApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MddApiApplication.class, args);
+        SpringApplication.run(MddApiApplication.class, args);
 	}
 
 }
