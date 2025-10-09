@@ -1,5 +1,51 @@
-<ng-container *ngIf="isMobile$ | async;">
-    <div class="w-full flex justify-center mb-10">
-        <img src="/assets/logo_p6.png" class="w-96" alt="logo" />
+<div class="w-full flex justify-center mb-10 md:hidden">
+    <img src="/assets/logo_p6.png" class="w-96" alt="logo" />
+</div>
+
+<div class="hidden md:block">
+    <div class="mt-4 ml-6">
+        <button routerLink="/">
+            <img src="/assets/arrow_back.png" class="w-12" alt="logo"/>
+        </button>
     </div>
-</ng-container>
+</div>
+<div class="flex justify-center relative-top-20">
+    <h2 class="!text-3xl">Inscription</h2>
+</div>
+
+<form [formGroup]="mainForm" class="center mt-5">
+    <div class="mb-6">
+        <mat-label class="font-bold">Nom d'utilisateur</mat-label>
+        <input 
+            matInput 
+            type="text" 
+            class="block w-64 !border !border-black !rounded-lg !px-3 !py-3 focus:!border-blue-500" 
+            formControlName="name" />
+    </div>
+    <div class="mb-6">
+        <mat-label class="font-bold">Adresse e-mail</mat-label>
+        <input 
+            matInput 
+            type="email" 
+            class="block w-64 !border !border-black !rounded-lg !px-3 !py-3 focus:!border-blue-500" 
+            formControlName="email" />
+    </div>
+    <div class="mb-6">
+        <mat-label class="font-bold">Mot de passe</mat-label>
+        <input 
+            matInput 
+            type="password" 
+            class="block w-64 !border !border-black !rounded-lg !px-3 !py-3 focus:!border-blue-500" 
+            formControlName="password" />
+    </div>
+    
+    <button 
+        mat-raised-button 
+        color="primary" 
+        class="w-40" 
+        [disabled]="!mainForm.valid"
+        (click)="onSubmitForm()">
+        S'inscrire
+    </button>
+</form>
+

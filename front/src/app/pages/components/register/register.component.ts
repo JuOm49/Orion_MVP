@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { BreakpointObserver } from '@angular/cdk/layout';
-import { map, Observable } from 'rxjs';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '@app/pages/services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -9,15 +9,33 @@ import { map, Observable } from 'rxjs';
 })
 export class RegisterComponent implements OnInit {
 
-    isMobile$: Observable<boolean>;
+  mainForm!: FormGroup;
 
+  constructor(private formBuilder: FormBuilder, private authService: AuthService) {}
 
-  constructor(private breakpointObserver: BreakpointObserver) {
-    this.isMobile$ = this.breakpointObserver.observe('(max-width: 640px)')
-      .pipe(map(result => result.matches));
-   }
+  ngOnInit(): void {
+    this.initFormControls();
+  }
 
+  //Methods
+  private initFormControls(): void {    
+    this.mainForm = this.formBuilder.group({
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password:['', [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[;,:/'(){}<>§*µ£€@#$%^&+=!]).{8,}$/)
+      ]]
+    });
+  }
 
-  ngOnInit(): void {}
+  onSubmitForm(): void {
+    if (this.mainForm.valid) {
+      this.authService.saveNewUser(this.mainForm.value).subscribe((response) => {
+        console.log(response);
+      });
+    }
+  }
 
 }
