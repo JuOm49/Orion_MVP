@@ -1,0 +1,27 @@
+.center {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.relative-top-20 {
+  position: relative;
+  top: -20px;
+}
+
+/* Masquer les icônes des gestionnaires de mots de passe */
+input::-webkit-credentials-auto-fill-button,
+input::-webkit-strong-password-auto-fill-button {
+  display: none !important;
+}
+
+/* Spécifique à NordPass */
+input[data-np-intersection-state] {
+  background-image: none !important;
+}
+
+/* Pour LastPass */
+input[data-lpignore="true"] {
+  background-image: none !important;
+}
