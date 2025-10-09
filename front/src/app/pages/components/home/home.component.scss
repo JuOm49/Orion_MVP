@@ -1,0 +1,31 @@
+.center {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+button {
+  font-size: 1.5em;
+  padding: 5px 40px;
+  font-weight: bold;
+  border-radius: 10px;
+  border: 2px solid black;
+}
+
+button:first-child {
+  margin-right: 5rem;
+}
+
+@media (max-width: 640px) {
+  button {
+    font-size: 1.2em;
+    padding: 5px 20px;
+    margin-bottom: 1rem;
+  }
+
+  button:first-child {
+    margin-right: 0;
+  }
+}
