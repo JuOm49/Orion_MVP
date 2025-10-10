@@ -1,5 +1,6 @@
 package com.openclassrooms.mddapi.services;
 
+import com.openclassrooms.mddapi.DTO.LoginUserDto;
 import com.openclassrooms.mddapi.DTO.RegisterUserDto;
 import com.openclassrooms.mddapi.DTO.UserDto;
 import com.openclassrooms.mddapi.models.User;
@@ -23,19 +24,11 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Iterable<User> findAll() {
-        return userRepository.findAll();
-    }
-
-    public Optional<User> findById(Integer id) {
-        return userRepository.findById(id);
-    }
-
     public User save(RegisterUserDto registerUserDto)
     {
         User newUser = registerUserDtoToUser(registerUserDto);
-        Optional<User> userFindByEmail = userRepository.findByEmail(newUser.getEmail());
-        Optional<User> userFindByName = userRepository.findByName(newUser.getName());
+        Optional<User> userFindByEmail = findByEmail(newUser.getEmail());
+        Optional<User> userFindByName = findByName(newUser.getName());
 
         if(userFindByEmail.isPresent() || userFindByName.isPresent()) {
             throw new IllegalArgumentException("User already exists.");
@@ -45,6 +38,29 @@ public class UserService {
 
         return userRepository.save(newUser);
     }
+
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public Optional<User> findByName(String name) {
+        return userRepository.findByName(name);
+    }
+
+//    public User loginUserDtoToUser(User userFindByEmail, User userFindByName, LoginUserDto loginUserDto) {
+//        User user = new User();
+//        if(userFindByEmail != null) {
+//            user.setEmail(userFindByEmail.getEmail());
+//            user.setName(userFindByEmail.getName());
+//        }
+//        else {
+//            user.setName(userFindByName.getName());
+//            user.setEmail(userFindByName.getEmail());
+//        }
+//        user.setPassword(loginUserDto.getPassword());
+//
+//        return user;
+//    }
 
     private User registerUserDtoToUser(RegisterUserDto registerUserDto) {
         User user = new User();

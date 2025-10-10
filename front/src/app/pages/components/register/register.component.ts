@@ -1,6 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '@app/pages/services/auth.service';
+import { Router } from '@angular/router';
+
+import { take } from 'rxjs';
+
+import { User } from '@core/interfaces/user.interface';
+
+import { RegisterRequest } from '@pages/interfaces/RegisterRequest.interface';
+import { AuthService } from '@pages/services/auth.service';
+import { AuthSuccess } from '@pages/interfaces/AuthSuccess.interface';
+import { SessionService } from '@app/shared/services/session.service';
 
 @Component({
   selector: 'app-register',
@@ -11,7 +20,7 @@ export class RegisterComponent implements OnInit {
 
   mainForm!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService) {}
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private sessionService: SessionService) {}
 
   ngOnInit(): void {
     this.initFormControls();
@@ -32,8 +41,16 @@ export class RegisterComponent implements OnInit {
 
   onSubmitForm(): void {
     if (this.mainForm.valid) {
-      this.authService.saveNewUser(this.mainForm.value).subscribe((response) => {
-        console.log(response);
+      const registerRequest = this.mainForm.value as RegisterRequest;
+      this.authService.saveNewUser(registerRequest).pipe(take(1)).subscribe((response: AuthSuccess) => {
+        localStorage.setItem('token', response.token);
+        this.authService.getUser().pipe(take(1)).subscribe((user: User) => {
+          this.sessionService.login(user);
+          this.router.navigate(['/posts']);
+        });
+      },
+      (error) => {
+        console.error('Error during registration:', error);
       });
     }
   }
