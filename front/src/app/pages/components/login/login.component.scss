@@ -1,0 +1,11 @@
+.center {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.relative-top-20 {
+  position: relative;
+  top: -20px;
+}

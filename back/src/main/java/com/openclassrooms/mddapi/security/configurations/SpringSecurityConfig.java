@@ -40,7 +40,9 @@ public class SpringSecurityConfig {
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return  http.csrf(AbstractHttpConfigurer::disable)
+        return  http
+                .cors(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/login", "/api/register").permitAll().anyRequest().authenticated())
@@ -53,8 +55,9 @@ public class SpringSecurityConfig {
         public void addCorsMappings(CorsRegistry registry) {
             registry.addMapping("/api/**")
                     .allowedOrigins("http://localhost:4200")
-                    .allowedMethods("GET", "POST", "PUT", "DELETE")
-                    .allowedHeaders("*");
+                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                    .allowedHeaders("*")
+                    .allowCredentials(true);
         }
     }
 
