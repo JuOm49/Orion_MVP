@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { User } from '@app/core/interfaces/user.interface';
-import { AuthSuccess } from '@app/pages/interfaces/AuthSuccess.interface';
-import { LoginRequest } from '@app/pages/interfaces/LoginRequest.interface';
-import { RegisterRequest } from '@app/pages/interfaces/RegisterRequest.interface';
-import { AuthService } from '@app/pages/services/auth.service';
-import { SessionService } from '@app/shared/services/session.service';
+
 import { take } from 'rxjs';
+
+import { User } from '@core/interfaces/user.interface';
+
+import { AuthSuccess } from '@pages/interfaces/AuthSuccess.interface';
+import { LoginRequest } from '@pages/interfaces/LoginRequest.interface';
+import { AuthService } from '@pages/services/auth.service';
+
+import { SessionService } from '@shared/services/session.service';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +20,11 @@ import { take } from 'rxjs';
 export class LoginComponent implements OnInit {
 
   mainForm!: FormGroup;
+  readonly labelsForInterface = {
+    login: 'se connecter',
+    identifier: 'E-mail ou nom d\'utilisateur',
+    password: 'Mot de passe'
+  }
   
   constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private sessionService: SessionService) {}
 

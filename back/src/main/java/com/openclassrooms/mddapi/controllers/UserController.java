@@ -7,13 +7,9 @@ import com.openclassrooms.mddapi.security.services.AuthenticationService;
 import com.openclassrooms.mddapi.security.services.JWTService;
 import com.openclassrooms.mddapi.services.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
@@ -55,5 +51,29 @@ public class UserController {
         Authentication authentication = this.authenticationService.handleUsernamePasswordAuthenticationToken(loginUserDto, user);
 
         return ResponseEntity.ok(Map.of( "token", jwtService.generateToken(authentication)));
+    }
+
+    @GetMapping("/currentUser")
+    public ResponseEntity<Map<String, String>> getCurrentUser(@RequestHeader("Authorization") String authorizationHeader) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body(Map.of("error", "Missing or invalid Authorization header"));
+        }
+
+        String token = authorizationHeader.substring(7);
+       // String userEmail = jwtService.extractUsername(token);
+
+        //test userEmail pour le test, à supprimer
+        String userEmail = "melyna.bavard@outlook.fr";
+
+        User user = userService.findByEmail(userEmail).orElse(null);
+        if (user == null) {
+            return ResponseEntity.status(404).body(Map.of("error", "User not found"));
+        }
+
+        return ResponseEntity.ok(Map.of(
+                "id", user.getId().toString(),
+                "name", user.getName(),
+                "email", user.getEmail()
+        ));
     }
 }

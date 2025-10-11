@@ -1,8 +1,6 @@
 package com.openclassrooms.mddapi.services;
 
-import com.openclassrooms.mddapi.DTO.LoginUserDto;
 import com.openclassrooms.mddapi.DTO.RegisterUserDto;
-import com.openclassrooms.mddapi.DTO.UserDto;
 import com.openclassrooms.mddapi.models.User;
 import com.openclassrooms.mddapi.repositories.UserRepository;
 import lombok.Data;

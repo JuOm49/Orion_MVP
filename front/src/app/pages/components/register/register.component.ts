@@ -19,6 +19,13 @@ import { SessionService } from '@app/shared/services/session.service';
 export class RegisterComponent implements OnInit {
 
   mainForm!: FormGroup;
+  readonly labelsForInterface = {
+    title: 'Inscription',
+    register: 's\'inscrire',
+    name: 'Nom d\'utilisateur',
+    email: 'E-mail',
+    password: 'Mot de passe'
+  }
 
   constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private sessionService: SessionService) {}
 

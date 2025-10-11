@@ -2,7 +2,7 @@ import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
 import { PostComponent } from "@pages/components/post/post.component";
-import { SharedPagesModule } from "@pages/shared-pages.module";
+import { SharedPagesModule } from "@pages/shared/shared-pages.module";
 
 const routes: Routes = [
     { path: '', component: PostComponent}
