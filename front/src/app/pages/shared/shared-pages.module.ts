@@ -1,20 +1,28 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { ReactiveFormsModule } from "@angular/forms";
+import { RouterModule } from "@angular/router";
 
-import { SharedMaterialModule } from "@app/shared/material.module";
+import { AuthHeaderComponent } from '@pages/shared/components/auth-header/auth-header.component';
+
+import { SharedMaterialModule } from "@shared/material.module";
 
 @NgModule({
-    declarations: [],
+    declarations: [
+    AuthHeaderComponent
+  ],
     imports: [
         CommonModule,
         ReactiveFormsModule,
+        RouterModule,
         SharedMaterialModule
     ],
     exports: [
         CommonModule,
         ReactiveFormsModule,
-        SharedMaterialModule
+        RouterModule,
+        SharedMaterialModule,
+        AuthHeaderComponent
     ]
 })
 export class SharedPagesModule {}

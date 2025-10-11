@@ -1,8 +1,8 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
-import { SharedPagesModule } from "@pages/shared-pages.module";
 import { HomeComponent } from "@pages/components/home/home.component";
+import { SharedPagesModule } from "@pages/shared/shared-pages.module";
 
 const routes: Routes = [
     { path: '', component: HomeComponent }

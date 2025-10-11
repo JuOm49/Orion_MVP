@@ -3,7 +3,7 @@ import { RouterModule, Routes } from "@angular/router";
 import { AuthService } from "@app/pages/services/auth.service";
 
 import { RegisterComponent } from "@pages/components/register/register.component";
-import { SharedPagesModule } from "@pages/shared-pages.module";
+import { SharedPagesModule } from "@pages/shared/shared-pages.module";
 
 const routes: Routes = [
     { path: '', component: RegisterComponent }

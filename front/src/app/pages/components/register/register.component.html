@@ -1,4 +1,4 @@
-<div class="w-full flex justify-center mb-10 md:hidden">
+<!-- <div class="w-full flex justify-center mb-10 md:hidden">
     <img src="/assets/logo_p6.png" class="w-96" alt="logo" />
 </div>
 
@@ -10,12 +10,14 @@
     </div>
 </div>
 <div class="flex justify-center relative-top-20">
-    <h2 class="!text-3xl">Inscription</h2>
-</div>
+    <h2 class="!text-3xl">{{ labelsForInterface.title }}</h2>
+</div> -->
+
+<app-auth-header [title]="labelsForInterface.register"></app-auth-header>
 
 <form [formGroup]="mainForm" class="center mt-5">
     <div class="mb-6">
-        <mat-label class="font-bold">Nom d'utilisateur</mat-label>
+        <mat-label class="font-bold">{{ labelsForInterface.name }}</mat-label>
         <input 
             matInput 
             type="text" 
@@ -23,7 +25,7 @@
             formControlName="name" />
     </div>
     <div class="mb-6">
-        <mat-label class="font-bold">Adresse e-mail</mat-label>
+        <mat-label class="font-bold">{{ labelsForInterface.email }}</mat-label>
         <input 
             matInput 
             type="email" 
@@ -31,7 +33,7 @@
             formControlName="email" />
     </div>
     <div class="mb-6">
-        <mat-label class="font-bold">Mot de passe</mat-label>
+        <mat-label class="font-bold">{{ labelsForInterface.password }}</mat-label>
         <input 
             matInput 
             type="password" 
@@ -45,7 +47,7 @@
         class="w-40" 
         [disabled]="!mainForm.valid"
         (click)="onSubmitForm()">
-        S'inscrire
+        {{ labelsForInterface.register }}
     </button>
 </form>
 
