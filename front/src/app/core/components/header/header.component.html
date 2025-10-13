@@ -13,22 +13,33 @@
 </ng-container>
 
 <ng-container *ngIf="!isLoginOrRegisterPage">
-    <!-- <nav class="flex justify-between items-center border border-b border-solid border-black pb-1 px-2 md:px-0">
+    <nav class="flex justify-between items-center border border-b border-solid border-black pb-1 px-2 text-2xl md:px-0">
         <img src="/assets/logo_p6.png" alt="logo" class="w-32" />
-        <div class="hidden md:flex space-x-4">
-            <button mat-button routerLink="/login">login</button>
-            <button mat-button routerLink="/register">register</button>
+        <!--desktop menu-->
+        <div class="hidden md:flex space-x-4 mr-4">
+            <button mat-button class="text-base font-bold text-red-500" (click)="logout()">Se déconnecter</button>
+            <button mat-button routerLink="/posts" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Articles</button>
+            <button mat-button routerLink="/subjects" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Thèmes</button>
+            <button mat-icon-button>
+                <mat-icon class="profile-icon ml-6">account_circle</mat-icon>
+            </button>
         </div>
+
+        <!--mobile menu-->
         <div class="md:hidden">
 
             <button mat-icon-button [matMenuTriggerFor]="appMenu">
-                <mat-icon>menu</mat-icon>
+                <mat-icon class="menu-icon">menu</mat-icon>
             </button>
   
-            <mat-menu #appMenu="matMenu">
-                <button mat-menu-item routerLink="/login">login</button>
-                <button mat-menu-item routerLink="/register">register</button>
+            <mat-menu #appMenu="matMenu" class="full-height-menu">
+                <button mat-menu-item class="text-red-500" (click)="logout()">Se déconnecter</button>
+                <button mat-menu-item routerLink="/posts" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Articles</button>
+                <button mat-menu-item routerLink="/subjects" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Thèmes</button>
+                <button>
+                    <mat-icon class="profile-icon position-icon-mobile">account_circle</mat-icon>
+                </button>
             </mat-menu>
         </div>
-    </nav> -->
+    </nav>
 </ng-container>

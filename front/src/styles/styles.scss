@@ -3,5 +3,33 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body { height: 100%; }
+html, body { 
+    height: 100%;
+    overflow: hidden;
+ }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Mobile menu material */
+.full-height-menu.mat-menu-panel {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    width: 50vw !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    border: 2px solid #000 !important;
+}
+
+.mat-menu-content {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    margin-top: 3rem !important;;
+}
+
+.mat-menu-item {
+    justify-content: center !important;
+    font-size: 1.5rem !important;
+    margin: 0.2rem 0 !important;
+    width: auto !important;
+}
