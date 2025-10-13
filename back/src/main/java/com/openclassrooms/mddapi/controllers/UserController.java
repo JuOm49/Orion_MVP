@@ -59,11 +59,7 @@ public class UserController {
             return ResponseEntity.status(401).body(Map.of("error", "Missing or invalid Authorization header"));
         }
 
-        String token = authorizationHeader.substring(7);
-       // String userEmail = jwtService.extractUsername(token);
-
-        //test userEmail pour le test, à supprimer
-        String userEmail = "melyna.bavard@outlook.fr";
+       String userEmail = authenticationService.handleUserFromToken(authorizationHeader).getEmail();
 
         User user = userService.findByEmail(userEmail).orElse(null);
         if (user == null) {
