@@ -8,6 +8,8 @@ const routes: Routes = [
   { path: 'login', loadChildren: () => import('./pages/components/login/login.module').then(m => m.LoginModule) },
   { path: 'posts/:id', loadChildren: () => import('./pages/components/post/post.module').then(m => m.PostModule) },
   { path: 'posts', loadChildren: () => import('./pages/components/posts/posts.module').then(m => m.PostsModule) },
+  { path: 'subjects/:id', loadChildren: () => import('./pages/components/subjects/subjects.module').then(m => m.SubjectsModule) },
+  { path: 'subjects', loadChildren: () => import('./pages/components/subjects/subjects.module').then(m => m.SubjectsModule) },
   { path: '', loadChildren: () => import('./pages/components/home/home.module').then(m => m.HomeModule) }
 ];
 
