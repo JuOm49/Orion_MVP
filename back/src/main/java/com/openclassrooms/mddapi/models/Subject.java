@@ -2,6 +2,7 @@ package com.openclassrooms.mddapi.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Entity
 @Data
+@ToString(exclude = {"posts", "subscriptions"})
 @Table(name = "subjects")
 public class Subject {
     @Id
