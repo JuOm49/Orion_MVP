@@ -32,7 +32,8 @@ export class AuthService {
         return this.httpClient.post<AuthSuccess>(`${environment.apiUrl}/login`, loginRequest).pipe(
             catchError((error) => {
                 if (error.status === 401 || error.status === 403) {
-                    // Handle 401/403 errors
+                    console.error('Unauthorized or forbidden:', error);
+                    
                 }
                 throw error;
             })
