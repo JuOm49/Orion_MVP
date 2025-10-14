@@ -39,4 +39,19 @@ export class SubscriptionService {
             })
         );
     }
+
+    unsubscribeFromSubject(subjectId: number) {
+        return this.http.delete(`${environment.apiUrl}/subscriptions/${subjectId}`).pipe(
+            take(1),
+            tap(() => {
+                this.getAllSubscribedSubjectsForUser();
+            }),
+            catchError((error) => {
+                if (error.status === 401 || error.status === 403) {
+                    // Handle 401/403 errors
+                }
+                throw error;
+            })
+        );
+    }
 }
