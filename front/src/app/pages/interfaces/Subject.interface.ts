@@ -1,6 +1,8 @@
+import { Subscription as SubscriptionForUser } from "@pages/interfaces/Subscription.interface";
+
 export interface Subject {
     id: number;
     title: string;
     description: string;
-    //à voir pour les objets imbriqués Subscription et post
+    subscriptionByUser?: SubscriptionForUser | null;
 }

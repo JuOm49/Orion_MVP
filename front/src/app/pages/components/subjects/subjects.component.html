@@ -1,6 +1,6 @@
 <div class="list">
     <div class="subject-grid">
-        <mat-card class="item" *ngFor="let subject of subjects">
+        <mat-card class="item" *ngFor="let subject of subjects$ | async">
             <mat-card-header>
                 <mat-card-title>{{ subject.title }}</mat-card-title>
             </mat-card-header>
@@ -10,8 +10,8 @@
                 </p>
             </mat-card-content>
             <mat-card-actions>
-                <button mat-raised-button color="primary">
-                    <span>S'abonner</span>
+                <button mat-raised-button [color]="isSubscribed(subject) ? '' : 'primary'" [class.subscribed-button]="isSubscribed(subject)" (click)="isSubscribed(subject) ? unsubscribeFromSubject(subject.id) : subscribeToSubject(subject.id)">
+                    <span>{{ isSubscribed(subject) ? labelsForInterface.unsubscribe : labelsForInterface.subscribe }}</span>
                 </button>
             </mat-card-actions>
         </mat-card>

@@ -1,6 +1,8 @@
 package com.openclassrooms.mddapi.security.configurations;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
+import com.openclassrooms.mddapi.security.interceptors.AuthByIdInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +19,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -51,6 +54,10 @@ public class SpringSecurityConfig {
 
     @Configuration
     public class WebConfig implements WebMvcConfigurer {
+
+        @Autowired
+        private AuthByIdInterceptor authByIdInterceptor;
+
         @Override
         public void addCorsMappings(CorsRegistry registry) {
             registry.addMapping("/api/**")
@@ -58,6 +65,13 @@ public class SpringSecurityConfig {
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                     .allowedHeaders("*")
                     .allowCredentials(true);
+        }
+
+        @Override
+        public void addInterceptors(InterceptorRegistry registry) {
+            registry.addInterceptor(authByIdInterceptor)
+                    .excludePathPatterns("/api/login", "/api/register", "/api/currentUser")
+                    .addPathPatterns("/api/**");
         }
     }
 

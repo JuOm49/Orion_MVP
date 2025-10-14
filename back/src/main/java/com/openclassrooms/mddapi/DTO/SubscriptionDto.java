@@ -5,6 +5,8 @@ import lombok.Data;
 @Data
 public class SubscriptionDto {
     private Long id;
-    private UserDto userDto;
-    private SubjectDto subjectDto;
+    private Long userId;
+    private Long subjectId;
+//    private UserDto userDto;
+//    private SubjectDto subjectDto;
 }

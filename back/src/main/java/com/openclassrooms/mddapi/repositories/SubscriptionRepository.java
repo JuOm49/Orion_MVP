@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SubscriptionRepository extends CrudRepository<Subscription, Integer> {
+    Iterable<Subscription> findByUserId(Long userId);
 }

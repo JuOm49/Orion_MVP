@@ -19,6 +19,10 @@ public class SubjectController {
 
     @GetMapping("/subjects")
     public ResponseEntity<Iterable<SubjectDto>> getSubjects() {
+        if(this.subjectService.getAll().isEmpty()) {;
+            return ResponseEntity.noContent().build();
+        }
+
         return ResponseEntity.ok(this.subjectService.getAll());
     }
 }

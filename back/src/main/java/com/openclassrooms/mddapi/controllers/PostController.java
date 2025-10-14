@@ -17,6 +17,7 @@ public class PostController {
         this.postService = postService;
     }
 
+    //ajouter la sécurité sur posts
     @GetMapping("/posts")
     public ResponseEntity<Iterable<PostDto>> getPosts() {
         return ResponseEntity.ok(this.postService.getAllPosts());
