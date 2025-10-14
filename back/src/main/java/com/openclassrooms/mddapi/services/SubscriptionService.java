@@ -31,6 +31,10 @@ public class SubscriptionService {
         return subscriptionDto;
     }
 
+    public void unsubscribeFromSubject(Long subscriptionId) {
+        subscriptionRepository.findById(subscriptionId).ifPresent(subscriptionRepository::delete);
+    }
+
     private List<SubscriptionDto> convertSubscriptionToSubscriptionDto(Iterable<Subscription> subscriptions) {
         List<SubscriptionDto> subscriptionsDto = new ArrayList<>();
         subscriptions.forEach(subscription -> {

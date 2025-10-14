@@ -65,4 +65,16 @@ public class SubscriptionController {
 
         return ResponseEntity.ok(Map.of("message", "Subscribed successfully"));
     }
+
+    @DeleteMapping("/subscriptions/{subscriptionId}")
+    public ResponseEntity<Void> unsubscribeFromSubject(HttpServletRequest request, @PathVariable Long subscriptionId) {
+        Long userId = (Long) request.getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        subscriptionService.unsubscribeFromSubject(subscriptionId);
+
+        return ResponseEntity.noContent().build();
+    }
 }
