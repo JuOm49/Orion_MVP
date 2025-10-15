@@ -39,6 +39,6 @@ public class Post {
     @JoinColumn(name = "subject_id", nullable = false, foreignKey = @ForeignKey(name= "fk_post_subject"))
     private Subject subject;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 }

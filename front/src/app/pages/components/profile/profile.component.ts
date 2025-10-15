@@ -20,6 +20,7 @@ export class ProfileComponent implements OnInit {
 
   readonly labelsForInterface = {
     profile: 'Profil utilisateur',
+    subscribes: 'Abonnements',
     save: 'Sauvegarder',
     unsubscribe: 'Se désabonner',
     ph_name: 'Nom d\'utilisateur',

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import { BehaviorSubject, map, Observable, switchMap, take } from 'rxjs';
 
@@ -20,8 +20,11 @@ export class SubjectsComponent implements OnInit {
   public subscriptions$!: Observable<Subscription[]>;
   readonly labelsForInterface = {
     subscribe: "S'abonner",
-    unsubscribe: "Déjà abonné"
+    alreadySubscribed: "Déjà abonné",
+    unsubscribe: "Se désabonner"
   }
+
+  @Input() isProfileView: boolean = false;
 
   constructor(private subjectsService: SubjectsService, private subscriptionService: SubscriptionService, private authService: AuthService) { }
 
@@ -67,11 +70,17 @@ export class SubjectsComponent implements OnInit {
     this.subscriptionService.getAllSubscribedSubjectsForUser().pipe(
       take(1),
       switchMap((subscriptions: Subscription[]) => {
+        const safeSubscriptions = (subscriptions && subscriptions.length > 0) ? subscriptions : [];
         return this.subjectsService.getAll().pipe(
           map((subjects: SubjectInterface[]) => {
-            subjects.forEach(subject => {
-              subject.subscriptionByUser = subscriptions.find(sub => sub.subjectId === subject.id) || null;
-            });
+            if(this.isProfileView) {
+              subjects = subjects.filter(subject => safeSubscriptions.some(subscription => subscription.subjectId === subject.id));
+            }
+            else {
+              subjects.forEach(subject => {
+                subject.subscriptionByUser = safeSubscriptions.find(subscription => subscription.subjectId === subject.id) || null;
+              });
+            } 
             return subjects;
           })
         );
@@ -91,6 +100,10 @@ export class SubjectsComponent implements OnInit {
     const currentSubjects = this.subjectsBehaviorSubject.value;
     const updatedSubjects = currentSubjects.map(subject => {
       if (subject.id === subjectId) {
+        if(this.isProfileView) {
+          return null; // Remove the subject from the list in profile view
+        }
+
         return {
           ...subject,
           subscriptionByUser: isSubscribed ? { id: 0, subjectId, userId: 0 } : null
@@ -98,6 +111,6 @@ export class SubjectsComponent implements OnInit {
       }
       return subject;
     });
-    this.subjectsBehaviorSubject.next(updatedSubjects);
+    this.subjectsBehaviorSubject.next(updatedSubjects.filter(subject => subject !== null) as SubjectInterface[]);
   }
 }

@@ -3,6 +3,7 @@ package com.openclassrooms.mddapi.services;
 import com.openclassrooms.mddapi.DTO.SubscriptionDto;
 import com.openclassrooms.mddapi.models.Subscription;
 import com.openclassrooms.mddapi.repositories.SubscriptionRepository;
+import jakarta.transaction.Transactional;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ public class SubscriptionService {
         this.subscriptionRepository = subscriptionRepository;
     }
 
+    @Transactional
     public List<SubscriptionDto> getAllSubscriptionsForUser(Long userId) {
         Iterable<Subscription> subscriptions = subscriptionRepository.findByUserId(userId);
        return convertSubscriptionToSubscriptionDto(subscriptions);
@@ -31,8 +33,15 @@ public class SubscriptionService {
         return subscriptionDto;
     }
 
-    public void unsubscribeFromSubject(Long subscriptionId) {
-        subscriptionRepository.findById(subscriptionId).ifPresent(subscriptionRepository::delete);
+    @Transactional
+    public void unsubscribeFromSubject(Long userId, Long subjectId) {
+
+        Subscription subscription = subscriptionRepository.findByUserIdAndSubjectId(userId, subjectId).orElse(null);
+        if (subscription == null) {
+            throw new IllegalArgumentException("Subscription does not exist.");
+        }
+
+        subscriptionRepository.delete(subscription);
     }
 
     private List<SubscriptionDto> convertSubscriptionToSubscriptionDto(Iterable<Subscription> subscriptions) {
