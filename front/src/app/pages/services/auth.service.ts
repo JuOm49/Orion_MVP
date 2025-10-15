@@ -17,8 +17,19 @@ export class AuthService {
 
     constructor(private httpClient: HttpClient) {}
 
-    saveNewUser(formValue: RegisterRequest): Observable<AuthSuccess> {
+    public saveUser(formValue: RegisterRequest): Observable<AuthSuccess> {
         return this.httpClient.post<AuthSuccess>(`${environment.apiUrl}/register`, formValue).pipe(
+            catchError((error) => {
+                if (error.status === 401 || error.status === 403) {
+                    // Handle 401/403 errors
+                }
+                throw error;
+            })
+        );
+    }
+
+    public updateUser(formValue: RegisterRequest): Observable<AuthSuccess> {
+        return this.httpClient.put<AuthSuccess>(`${environment.apiUrl}/user`, formValue).pipe(
             catchError((error) => {
                 if (error.status === 401 || error.status === 403) {
                     // Handle 401/403 errors

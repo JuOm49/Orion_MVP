@@ -3,7 +3,7 @@ import { CommonModule } from "@angular/common";
 import { ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 
-import { AuthHeaderComponent } from '@pages/shared/components/auth-header/auth-header.component';
+import { TitleComponent } from '@pages/shared/components/title/title.component';
 import { InvalidCredentialsComponent } from "@pages/shared/components/invalid-credentials/invalid-credentials.component";
 
 
@@ -11,7 +11,7 @@ import { SharedMaterialModule } from "@shared/material.module";
 
 @NgModule({
     declarations: [
-    AuthHeaderComponent,
+    TitleComponent,
     InvalidCredentialsComponent
   ],
     imports: [
@@ -25,7 +25,7 @@ import { SharedMaterialModule } from "@shared/material.module";
         ReactiveFormsModule,
         RouterModule,
         SharedMaterialModule,
-        AuthHeaderComponent,
+        TitleComponent,
         InvalidCredentialsComponent
     ]
 })

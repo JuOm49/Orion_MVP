@@ -19,7 +19,7 @@ import { SessionService } from '@shared/services/session.service';
 })
 export class LoginComponent implements OnInit {
 
-  mainForm!: FormGroup;
+  loginForm!: FormGroup;
   invalidCredentials: boolean = false;
 
   readonly labelsForInterface = {
@@ -37,8 +37,8 @@ export class LoginComponent implements OnInit {
 
   //Methods
   onSubmitForm(): void {
-      if (this.mainForm.valid) {
-        const loginRequest = this.mainForm.value as LoginRequest;
+      if (this.loginForm.valid) {
+        const loginRequest = this.loginForm.value as LoginRequest;
         this.authService.loginUser(loginRequest).pipe(take(1)).subscribe({
           next: (response: AuthSuccess) => {
           localStorage.setItem('token', response.token);
@@ -63,7 +63,7 @@ export class LoginComponent implements OnInit {
     }
 
     getFieldError(fieldName: 'identifier' | 'password'): string | null {
-      const field = this.mainForm.get(fieldName);
+      const field = this.loginForm.get(fieldName);
       if (field && field.errors && (field.touched)) {
         const errors = field.errors;
         
@@ -81,7 +81,7 @@ export class LoginComponent implements OnInit {
     }
 
     private initFormControls(): void {    
-      this.mainForm = this.formBuilder.group({
+      this.loginForm = this.formBuilder.group({
         identifier: ['', [
           Validators.required,
           Validators.maxLength(255)
