@@ -22,8 +22,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User save(RegisterUserDto registerUserDto)
-    {
+    public User save(RegisterUserDto registerUserDto) {
         User newUser = registerUserDtoToUser(registerUserDto);
         Optional<User> userFindByEmail = findByEmail(newUser.getEmail());
         Optional<User> userFindByName = findByName(newUser.getName());
@@ -37,6 +36,21 @@ public class UserService {
         return userRepository.save(newUser);
     }
 
+    public User update(Long userId, RegisterUserDto registerUserDto) {
+        User updateUser = registerUserDtoToUser(registerUserDto);
+        Optional<User> userFindByEmail = findByEmail(updateUser.getEmail());
+        Optional<User> userFindByName = findByName(updateUser.getName());
+        if(userFindByEmail.isEmpty() && userFindByName.isEmpty()) {
+            throw new IllegalArgumentException("User does not exist.");
+        }
+
+        updateUser.setId(userId);
+        updateUser.setUpdatedAt(LocalDateTime.now());
+        updateUser.setPassword(passwordEncoder.encode(updateUser.getPassword()));
+
+        return userRepository.save(updateUser);
+    }
+
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
@@ -44,21 +58,6 @@ public class UserService {
     public Optional<User> findByName(String name) {
         return userRepository.findByName(name);
     }
-
-//    public User loginUserDtoToUser(User userFindByEmail, User userFindByName, LoginUserDto loginUserDto) {
-//        User user = new User();
-//        if(userFindByEmail != null) {
-//            user.setEmail(userFindByEmail.getEmail());
-//            user.setName(userFindByEmail.getName());
-//        }
-//        else {
-//            user.setName(userFindByName.getName());
-//            user.setEmail(userFindByName.getEmail());
-//        }
-//        user.setPassword(loginUserDto.getPassword());
-//
-//        return user;
-//    }
 
     private User registerUserDtoToUser(RegisterUserDto registerUserDto) {
         User user = new User();

@@ -6,6 +6,7 @@ import com.openclassrooms.mddapi.models.User;
 import com.openclassrooms.mddapi.security.services.AuthenticationService;
 import com.openclassrooms.mddapi.security.services.JWTService;
 import com.openclassrooms.mddapi.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
@@ -51,6 +52,25 @@ public class UserController {
         Authentication authentication = this.authenticationService.handleUsernamePasswordAuthenticationToken(loginUserDto, user);
 
         return ResponseEntity.ok(Map.of( "token", jwtService.generateToken(authentication)));
+    }
+
+    @PutMapping("/user")
+    public ResponseEntity<Map<String, String>> updateUser(HttpServletRequest request, @RequestBody RegisterUserDto registerUserDto) {
+        Long userId = (Long) request.getAttribute("userId");
+
+        if(userId == null) {
+            return ResponseEntity.status(401).body(Map.of("error", "Invalid token"));
+        }
+
+        User updatedUser = userService.update(userId, registerUserDto);
+
+        if(updatedUser == null) {
+            return ResponseEntity.status(400).body(Map.of("error", "Could not update user"));
+        }
+
+        Authentication authentication = this.authenticationService.handleUsernamePasswordAuthenticationToken(updatedUser);
+
+        return ResponseEntity.ok(Map.of( "token", this.jwtService.generateToken(authentication)));
     }
 
     @GetMapping("/currentUser")

@@ -1,55 +1,46 @@
+<app-title [title]="labelsForInterface.profile" [isRegisterOrLoginPage]="false"></app-title>
 
-
-<app-title [title]="labelsForInterface.register"></app-title>
-
-<form [formGroup]="registerForm" class="flex flex-col items-center mt-5">
-    <div class="mb-6">
-        <mat-label class="font-bold">{{ labelsForInterface.name }}</mat-label>
+<form [formGroup]="profileForm" class="flex flex-col items-center mt-5">
         <input 
             matInput 
             type="text" 
-            class="block w-64 md:w-96 !border !border-black !rounded-lg !px-3 !py-3 focus:!border-blue-500" 
+            class="block w-64 md:w-96 !border !border-black !rounded-lg !px-3 !py-3 focus:!border-blue-500"
+            [placeholder]="labelsForInterface.ph_name"
             formControlName="name" />
         <div class="w-64 md:w-96 h-6 mt-1 flex justify-center items-start">
             <mat-error *ngIf="getFieldError('name') as error" class="text-red-500 text-sm text-center">
                 {{ error }}
             </mat-error>
         </div>
-    </div>
-    <div class="mb-6">
-        <mat-label class="font-bold">{{ labelsForInterface.email }}</mat-label>
         <input 
             matInput 
             type="email" 
-            class="block w-64 md:w-96 !border !border-black !rounded-lg !px-3 !py-3 focus:!border-blue-500" 
+            class="block w-64 md:w-96 !border !border-black !rounded-lg !px-3 !py-3 focus:!border-blue-500"
+            [placeholder]="labelsForInterface.ph_email" 
             formControlName="email" />
         <div class="w-64 md:w-96 h-6 mt-1 flex justify-center items-start">
             <mat-error *ngIf="getFieldError('email') as error" class="text-red-500 text-sm text-center">
                 {{ error }}
             </mat-error>
         </div>
-    </div>
-    <div class="mb-6">
-        <mat-label class="font-bold">{{ labelsForInterface.password }}</mat-label>
         <input 
             matInput 
             type="password" 
-            class="block w-64 md:w-96 !border !border-black !rounded-lg !px-3 !py-3 focus:!border-blue-500" 
+            class="block w-64 md:w-96 !border !border-black !rounded-lg !px-3 !py-3 focus:!border-blue-500"
+            [placeholder]="labelsForInterface.ph_password"
             formControlName="password" />
-        <div class="w-64 md:w-96 h-12 mt-1 flex justify-center items-start">
-            <mat-error *ngIf="getFieldError('password') as error" class="text-red-500 text-sm text-center leading-tight">
+        <div class="w-64 md:w-96 h-6 mt-1 flex justify-center items-start">
+            <mat-error *ngIf="getFieldError('password') as error" class="text-red-500 text-sm text-center">
                 {{ error }}
             </mat-error>
         </div>
-    </div>
-    
     <button 
         mat-raised-button 
         color="primary" 
         class="w-40" 
-        [disabled]="!registerForm.valid"
+        [disabled]="!profileForm.valid"
         (click)="onSubmitForm()">
-        {{ labelsForInterface.register }}
+        {{ labelsForInterface.save }}
     </button>
 </form>
 

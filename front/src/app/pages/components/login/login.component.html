@@ -1,6 +1,6 @@
-<app-auth-header [title]="labelsForInterface.login"></app-auth-header>
+<app-title [title]="labelsForInterface.login"></app-title>
 
-<form [formGroup]="mainForm" class="flex flex-col items-center mt-5">
+<form [formGroup]="loginForm" class="flex flex-col items-center mt-5">
     <div class="mb-6">
         <mat-label class="font-bold">{{ labelsForInterface.identifier }}</mat-label>
         <input 
@@ -31,7 +31,7 @@
         mat-raised-button 
         color="primary" 
         class="w-40" 
-        [disabled]="!mainForm.valid"
+        [disabled]="!loginForm.valid"
         (click)="onSubmitForm()">
        {{ labelsForInterface.login }}
     </button>

@@ -13,8 +13,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     position: fixed !important;
     top: 0 !important;
     right: 0 !important;
-    width: 50vw !important;
+    width: 250px !important;
     height: 100vh !important;
+    max-width: 250px !important;
     max-height: 100vh !important;
     border: 2px solid #000 !important;
 }
@@ -23,7 +24,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     display: flex !important;
     flex-direction: column !important;
     align-items: flex-end !important;
-    margin-top: 3rem !important;;
+    margin-top: 3rem !important;
 }
 
 .mat-menu-item {
@@ -31,4 +32,13 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     font-size: 1.5rem !important;
     margin: 0.2rem 0 !important;
     width: auto !important;
+}
+
+@media (max-width: 450px) {
+    .full-height-menu.mat-menu-panel {
+        width: 180px !important;
+    }
+    .mat-menu-item {
+        font-size: 1.2rem !important;
+    }
 }

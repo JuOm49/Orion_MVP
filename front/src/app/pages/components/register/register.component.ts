@@ -18,7 +18,7 @@ import { SessionService } from '@app/shared/services/session.service';
 })
 export class RegisterComponent implements OnInit {
 
-  mainForm!: FormGroup;
+  registerForm!: FormGroup;
   invalidCredentials: boolean = false;
 
   readonly labelsForInterface = {
@@ -33,14 +33,14 @@ export class RegisterComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private sessionService: SessionService) {}
 
   ngOnInit(): void {
-    this.initMainForm();
+    this.initRegisterForm();
   }
 
   //Methods
   onSubmitForm(): void {
-    if (this.mainForm.valid) {
-      const registerRequest = this.mainForm.value as RegisterRequest;
-      this.authService.saveNewUser(registerRequest).pipe(take(1)).subscribe({
+    if (this.registerForm.valid) {
+      const registerRequest = this.registerForm.value as RegisterRequest;
+      this.authService.saveUser(registerRequest).pipe(take(1)).subscribe({
         next: (response: AuthSuccess) => {
           localStorage.setItem('token', response.token);
           this.authService.getUser().pipe(take(1)).subscribe({
@@ -64,7 +64,7 @@ export class RegisterComponent implements OnInit {
   }
 
   getFieldError(fieldName: 'name' | 'email' | 'password'): string | null {
-    const field = this.mainForm.get(fieldName);
+    const field = this.registerForm.get(fieldName);
     if (!field || !field.touched) return null;
 
     if (field.hasError('required')) {
@@ -91,8 +91,8 @@ export class RegisterComponent implements OnInit {
     return null;
   }
 
-  private initMainForm(): void {    
-    this.mainForm = this.formBuilder.group({
+  private initRegisterForm(): void {
+    this.registerForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.maxLength(80)]],
       email: ['', [Validators.required, Validators.email, Validators.maxLength(255)]],
       password: ['', [
