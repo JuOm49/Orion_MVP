@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Post } from '@app/pages/interfaces/Post.interface';
 import { PostsService } from '@app/pages/services/posts.service';
-import { take } from 'rxjs';
+import { Observable, take } from 'rxjs';
 
 @Component({
   selector: 'app-posts',
@@ -10,6 +11,7 @@ import { take } from 'rxjs';
 
 export class PostsComponent implements OnInit {
 
+  public posts$!: Observable<Post[]>;
   constructor(private postsService: PostsService) { }
 
   ngOnInit(): void {
