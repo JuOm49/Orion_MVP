@@ -1,6 +1,7 @@
 package com.openclassrooms.mddapi.services;
 
 import com.openclassrooms.mddapi.DTO.RegisterUserDto;
+import com.openclassrooms.mddapi.DTO.UserDto;
 import com.openclassrooms.mddapi.models.User;
 import com.openclassrooms.mddapi.repositories.UserRepository;
 import lombok.Data;
@@ -58,6 +59,18 @@ public class UserService {
     public Optional<User> findByName(String name) {
         return userRepository.findByName(name);
     }
+
+    public UserDto convertUserToUserDto(User user) {
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setName(user.getName());
+        userDto.setEmail(user.getEmail());
+        userDto.setCreatedAt(user.getCreatedAt());
+        userDto.setUpdatedAt(user.getUpdatedAt());
+
+        return userDto;
+    }
+
 
     private User registerUserDtoToUser(RegisterUserDto registerUserDto) {
         User user = new User();

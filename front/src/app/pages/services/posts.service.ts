@@ -1,9 +1,10 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
-import { catchError } from "rxjs";
+import { catchError, Observable } from "rxjs";
 
 import { environment } from "@env/environment";
+import { Post } from "../interfaces/Post.interface";
 
 @Injectable({
     providedIn: 'root'
@@ -11,8 +12,8 @@ import { environment } from "@env/environment";
 export class PostsService {
     constructor(private http: HttpClient) { }
 
-    getAll() {
-        return this.http.get(`${environment.apiUrl}/posts`).pipe(
+    getAll(): Observable<Post[]> {
+        return this.http.get<Post[]>(`${environment.apiUrl}/posts`).pipe(
             catchError((error) => {
                 if (error.status === 401 || error.status === 403) {
                     // Handle 401/403 errors

@@ -7,6 +7,7 @@ const routes: Routes = [
   { path: 'profile', loadChildren: () => import('@pages/components/profile/profile.module').then(m => m.ProfileModule) },
   { path: 'register', loadChildren: () => import('@pages/components/register/register.module').then(m => m.RegisterModule) },
   { path: 'login', loadChildren: () => import('@pages/components/login/login.module').then(m => m.LoginModule) },
+  { path: 'posts/create', loadChildren: () => import('@pages/components/post-create/post-create.module').then(m => m.PostCreateModule) },
   { path: 'posts/:id', loadChildren: () => import('@pages/components/post/post.module').then(m => m.PostModule) },
   { path: 'posts', loadChildren: () => import('@pages/components/posts/posts.module').then(m => m.PostsModule) },
   { path: 'subjects/:id', loadChildren: () => import('@pages/shared/components/subjects/subjects.module').then(m => m.SubjectsModule) },
