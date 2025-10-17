@@ -50,7 +50,7 @@ export class PostsComponent implements OnInit {
   }
 
   private loadPosts(): void {
-    this.postsService.getAll().pipe(
+    this.postsService.getSubscribedPostsForUser().pipe(
       take(1),
       map((posts: Post[]) => {
         posts.forEach(post => {

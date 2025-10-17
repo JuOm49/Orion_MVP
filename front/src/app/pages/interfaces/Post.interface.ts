@@ -10,6 +10,6 @@ export interface Post {
     createdAt: Date;
     updatedAt: Date;
     user: User;
-    subject?: SubjectForPost;
+    subject: SubjectForPost;
     comments?: CommentPost[];
 }

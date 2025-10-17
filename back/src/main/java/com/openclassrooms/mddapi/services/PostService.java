@@ -2,30 +2,44 @@ package com.openclassrooms.mddapi.services;
 
 import com.openclassrooms.mddapi.DTO.*;
 import com.openclassrooms.mddapi.models.Post;
+import com.openclassrooms.mddapi.models.Subject;
+import com.openclassrooms.mddapi.models.Subscription;
 import com.openclassrooms.mddapi.models.User;
 import com.openclassrooms.mddapi.repositories.PostRepository;
+import com.openclassrooms.mddapi.repositories.SubscriptionRepository;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Data
 @Service
 public class PostService {
 
     private final PostRepository postRepository;
+    private final SubscriptionRepository subscriptionRepository;
 
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, SubscriptionRepository subscriptionRepository) {
         this.postRepository = postRepository;
+        this.subscriptionRepository = subscriptionRepository;
     }
 
-    public List<PostListDto> getAllPosts() {
-        Iterable<Post> posts = postRepository.findAll();
+    public List<PostListDto> getSubscribedPostsForUser(Long userId) {
+        Iterable<Subscription> subscriptions = subscriptionRepository.findByUserId(userId);
+        List<Long> subjectIds = new ArrayList<>();
+        subscriptions.forEach(subscription -> {
+           subjectIds.add(subscription.getSubject().getId());
+        });
+
+        Iterable<Post> posts = postRepository.findBySubjectIdIn(subjectIds);
+
         List<PostListDto> postsListDto = new ArrayList<>();
         for(Post post : posts) {
             postsListDto.add(convertPostToPostListDto(post));
         }
+
         return postsListDto;
     }
 
@@ -70,6 +84,7 @@ public class PostService {
 
         setPostListDtoFromPost(post, postListDto);
         postListDto.setUserForPostListDto(setUserDtoForPostsList(post.getUser()));
+        postListDto.setSubjectForPostListDtoList(setSubjectForPostListDto(post.getSubject()));
 
         return postListDto;
     }
@@ -87,5 +102,11 @@ public class PostService {
         userForPostListDtoDto.setId(user.getId());
         userForPostListDtoDto.setName(user.getName());
         return userForPostListDtoDto;
+    }
+
+    private SubjectForPostListDto setSubjectForPostListDto(Subject subject) {
+        SubjectForPostListDto subjectForPostListDto = new SubjectForPostListDto();
+        subjectForPostListDto.setId(subject.getId());
+        return subjectForPostListDto;
     }
 }

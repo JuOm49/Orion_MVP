@@ -13,4 +13,6 @@ public class PostListDto {
     private LocalDateTime updatedAt;
     @JsonProperty("user")
     private UserForPostListDto userForPostListDto;
+    @JsonProperty("subject")
+    private SubjectForPostListDto subjectForPostListDtoList;
 }
