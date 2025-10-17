@@ -10,10 +10,10 @@ import { Post } from "../interfaces/Post.interface";
     providedIn: 'root'
 })
 export class PostsService {
-    constructor(private http: HttpClient) { }
+    constructor( private http: HttpClient ) { }
 
-    getAll(): Observable<Post[]> {
-        return this.http.get<Post[]>(`${environment.apiUrl}/posts`).pipe(
+    getSubscribedPostsForUser(): Observable<Post[]> {
+        return this.http.get<Post[]>(`${environment.apiUrl}/posts/subscribed`).pipe(
             catchError((error) => {
                 if (error.status === 401 || error.status === 403) {
                     // Handle 401/403 errors
