@@ -1,6 +1,7 @@
 package com.openclassrooms.mddapi.security.services;
 
 import lombok.Data;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.*;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Map;
 
 @Data
 @Service
@@ -35,7 +37,14 @@ public class JWTService {
 
         JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims);
 
-        return this.jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
+        String token;
+        try {
+            token = this.jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
+        } catch (Exception e) {
+            throw new RuntimeException("Error generating token", e);
+        }
+
+        return token;
     }
 
     public String getUserMailFromToken(Jwt jwt) {

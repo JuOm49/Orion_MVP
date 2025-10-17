@@ -20,6 +20,7 @@ public class SubjectService {
 
     public List<SubjectDto> getAll() {
         Iterable<Subject> subjects = subjectRepository.findAll();
+
         List<SubjectDto> subjectsDto = new ArrayList<>();
         for (Subject subject : subjects) {
             subjectsDto.add(subjectToSubjectDto(subject));

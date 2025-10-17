@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
-import { BehaviorSubject, map, Observable, switchMap, take } from 'rxjs';
+import { BehaviorSubject, map, Observable, Subject, switchMap, take, takeUntil } from 'rxjs';
 
 import { SubjectsService } from '@pages/services/subjects.service';
 import { Subject as SubjectInterface } from '@pages/interfaces/Subject.interface';
@@ -13,11 +13,13 @@ import { Subscription } from '@pages/interfaces/Subscription.interface';
   templateUrl: './subjects.component.html',
   styleUrls: ['./subjects.component.scss']
 })
-export class SubjectsComponent implements OnInit {
+export class SubjectsComponent implements OnInit, OnDestroy {
 
   private subjectsBehaviorSubject = new BehaviorSubject<SubjectInterface[]>([]);
   public subjects$ = this.subjectsBehaviorSubject.asObservable();
   public subscriptions$!: Observable<Subscription[]>;
+  private destroy$ = new Subject<void>();
+
   readonly labelsForInterface = {
     subscribe: "S'abonner",
     alreadySubscribed: "Déjà abonné",
@@ -32,34 +34,44 @@ export class SubjectsComponent implements OnInit {
     this.loadSubjects();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.subjectsBehaviorSubject.complete();
+  }
+
   subscribeToSubject(subjectId: number): void {
     // Optimistic update for UI
     this.updateOptimisticSubjectSubscription(subjectId, true);
     
-    this.subscriptionService.subscribeToSubject(subjectId).subscribe({
-      next: (response) => {
-        console.log('Subscribed successfully:', response);
-      }, error: (error) => {
-        console.error('Error subscribing to subject:', error);
-        // In case of error, revert the state
-        this.updateOptimisticSubjectSubscription(subjectId, false);
-      }
-    });
+    this.subscriptionService.subscribeToSubject(subjectId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          console.log('Subscribed successfully:', response);
+        }, error: (error) => {
+          console.error('Error subscribing to subject:', error);
+          // In case of error, revert the state
+          this.updateOptimisticSubjectSubscription(subjectId, false);
+        }
+      });
   }
 
   unsubscribeFromSubject(subjectId: number): void {
     // Optimistic update for UI
     this.updateOptimisticSubjectSubscription(subjectId, false);
     
-    this.subscriptionService.unsubscribeFromSubject(subjectId).subscribe({
-      next: () => {
-        console.log('Unsubscribed successfully');
-      }, error: (error) => {
-        console.error('Error unsubscribing from subject:', error);
-        // In case of error, revert the state
-        this.updateOptimisticSubjectSubscription(subjectId, true);
-      }
-    });
+    this.subscriptionService.unsubscribeFromSubject(subjectId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          console.log('Unsubscribed successfully');
+        }, error: (error) => {
+          console.error('Error unsubscribing from subject:', error);
+          // In case of error, revert the state
+          this.updateOptimisticSubjectSubscription(subjectId, true);
+        }
+      });
   }
 
   isSubscribed(subject: SubjectInterface): boolean {
@@ -72,6 +84,7 @@ export class SubjectsComponent implements OnInit {
       switchMap((subscriptions: Subscription[]) => {
         const safeSubscriptions = (subscriptions && subscriptions.length > 0) ? subscriptions : [];
         return this.subjectsService.getAll().pipe(
+          take(1),
           map((subjects: SubjectInterface[]) => {
             if(this.isProfileView) {
               subjects = subjects.filter(subject => safeSubscriptions.some(subscription => subscription.subjectId === subject.id));

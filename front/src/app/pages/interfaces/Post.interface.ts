@@ -6,10 +6,10 @@ import { Comment as CommentPost } from "@pages/interfaces/Comment.interface";
 export interface Post {
     id: number;
     title: string;
-    description: string;
+    content: string;
     createdAt: Date;
     updatedAt: Date;
     user: User;
-    subject: SubjectForPost;
+    subject?: SubjectForPost;
     comments?: CommentPost[];
 }

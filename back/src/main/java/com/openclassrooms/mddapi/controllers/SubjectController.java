@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class SubjectController {
@@ -19,10 +21,11 @@ public class SubjectController {
 
     @GetMapping("/subjects")
     public ResponseEntity<Iterable<SubjectDto>> getSubjects() {
-        if(this.subjectService.getAll().isEmpty()) {;
+        List<SubjectDto> subjectDto = this.subjectService.getAll();
+        if(subjectDto.isEmpty()) {;
             return ResponseEntity.noContent().build();
         }
 
-        return ResponseEntity.ok(this.subjectService.getAll());
+        return ResponseEntity.ok(subjectDto);
     }
 }
