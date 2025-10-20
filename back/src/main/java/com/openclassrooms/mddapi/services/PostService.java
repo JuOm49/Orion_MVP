@@ -1,10 +1,9 @@
 package com.openclassrooms.mddapi.services;
 
 import com.openclassrooms.mddapi.DTO.*;
-import com.openclassrooms.mddapi.models.Post;
-import com.openclassrooms.mddapi.models.Subject;
-import com.openclassrooms.mddapi.models.Subscription;
-import com.openclassrooms.mddapi.models.User;
+import com.openclassrooms.mddapi.exceptions.IllegalArgumentException;
+import com.openclassrooms.mddapi.exceptions.NotFoundException;
+import com.openclassrooms.mddapi.models.*;
 import com.openclassrooms.mddapi.repositories.PostRepository;
 
 import jakarta.transaction.Transactional;
@@ -16,7 +15,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Data
 @Service
@@ -51,8 +49,15 @@ public class PostService {
         return postsListDto;
     }
 
+    public PostDto findPostById(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundException("Post not found"));
+
+        return convertPostToPostDto(post);
+    }
+
     @Transactional
-    public Post createPost(NewPostDto newPostDto, Long userId) {
+    public void createPost(NewPostDto newPostDto, Long userId) {
         if (newPostDto == null
                 || !StringUtils.hasText(newPostDto.getTitle())
                 || !StringUtils.hasText(newPostDto.getContent())) {
@@ -60,14 +65,14 @@ public class PostService {
         }
 
         User user = this.userService.findById(userId)
-               .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+               .orElseThrow(()-> new NotFoundException("User not found"));
 
        Subject subject = this.subjectService.findById(newPostDto.getSubjectId())
-               .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Subject not found"));
+               .orElseThrow(()-> new NotFoundException("Subject not found"));
 
        Post post = convertNewPostDtoToPost(newPostDto, user, subject);
 
-       return  postRepository.save(post);
+        postRepository.save(post);
     }
 
     private Post convertNewPostDtoToPost(NewPostDto newPostDto, User user, Subject subject) {
@@ -80,41 +85,42 @@ public class PostService {
         return post;
     }
 
-//    private PostDto convertPostToPostDto(Post post) {
-//        SubjectDto subjectDto = new SubjectDto();
-//        CommentDto commentDto = new CommentDto();
-//        UserDto userDto = new UserDto();
-//        PostDto postDto = new PostDto();
-//
-//        postDto.setId(post.getId());
-//        postDto.setTitle(post.getTitle());
-//        postDto.setContent(post.getContent());
-//        postDto.setCreatedAt(post.getCreatedAt());
-//        postDto.setUpdatedAt(post.getUpdatedAt());
-//
-//        subjectDto.setId(post.getSubject().getId());
-//        subjectDto.setTitle(post.getSubject().getTitle());
-//        subjectDto.setDescription(post.getSubject().getDescription());
-//        postDto.setSubjectDto(subjectDto);
-//
-//        userDto.setId(post.getUser().getId());
-//        userDto.setName(post.getUser().getName());
-//        postDto.setUserDto(userDto);
-//
-//        if(post.getComments() != null) {
-//            List<CommentDto> commentsDto = new ArrayList<>();
-//            post.getComments().forEach(comment -> {
-//                commentDto.setId(comment.getId());
-//                commentDto.setMessage(comment.getMessage());
-//                commentDto.setCreatedAt(comment.getCreatedAt());
-//                commentDto.setUpdatedAt(comment.getUpdatedAt());
-//                commentsDto.add(commentDto);
-//            });
-//            postDto.setCommentsDto(commentsDto);
-//        }
-//
-//        return postDto;
-//    }
+    private PostDto convertPostToPostDto(Post post) {
+        SubjectDto subjectDto = new SubjectDto();
+        CommentDto commentDto = new CommentDto();
+        UserDto userDto = new UserDto();
+        PostDto postDto = new PostDto();
+
+        postDto.setId(post.getId());
+        postDto.setTitle(post.getTitle());
+        postDto.setContent(post.getContent());
+        postDto.setCreatedAt(post.getCreatedAt());
+        postDto.setUpdatedAt(post.getUpdatedAt());
+
+        subjectDto.setId(post.getSubject().getId());
+        subjectDto.setTitle(post.getSubject().getTitle());
+        subjectDto.setDescription(post.getSubject().getDescription());
+        postDto.setSubjectDto(subjectDto);
+
+        userDto.setId(post.getUser().getId());
+        userDto.setName(post.getUser().getName());
+        postDto.setUserDto(userDto);
+
+        if(post.getComments() != null) {
+            List<CommentDto> commentsDto = new ArrayList<>();
+            post.getComments().forEach(comment -> {
+                commentDto.setId(comment.getId());
+                commentDto.setMessage(comment.getMessage());
+                commentDto.setCreatedAt(comment.getCreatedAt());
+                commentDto.setUpdatedAt(comment.getUpdatedAt());
+                commentDto.setUserDto(setCommentUserToUserDtoForPostDetail(comment));
+                commentsDto.add(commentDto);
+            });
+            postDto.setCommentsDto(commentsDto);
+        }
+
+        return postDto;
+    }
 
     private PostListDto convertPostToPostListDto(Post post) {
         PostListDto postListDto = new PostListDto();
@@ -124,6 +130,14 @@ public class PostService {
         postListDto.setSubjectForPostListDtoList(setSubjectForPostListDto(post.getSubject()));
 
         return postListDto;
+    }
+
+    //set Method for post detail
+    private UserDto setCommentUserToUserDtoForPostDetail(Comment comment) {
+        UserDto userDto = new UserDto();
+        userDto.setId(comment.getUser().getId());
+        userDto.setName(comment.getUser().getName());
+        return userDto;
     }
 
     // set Methods for posts list

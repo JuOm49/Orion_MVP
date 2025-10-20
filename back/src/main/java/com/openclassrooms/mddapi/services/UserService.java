@@ -7,6 +7,7 @@ import com.openclassrooms.mddapi.repositories.UserRepository;
 import lombok.Data;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.openclassrooms.mddapi.exceptions.IllegalArgumentException;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
