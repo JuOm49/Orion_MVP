@@ -39,10 +39,10 @@ export class PostsComponent implements OnInit {
     let sortedPosts: Post[] = [];
     
     if (this.sortByDateAscending) {
-      sortedPosts = [...currentPosts].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+      sortedPosts = [...currentPosts].sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime());
       this.sortByDateAscending = false;
     } else {
-      sortedPosts = [...currentPosts].sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime());
+      sortedPosts = [...currentPosts].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());    
       this.sortByDateAscending = true;
     }
     
@@ -53,6 +53,7 @@ export class PostsComponent implements OnInit {
     this.postsService.getSubscribedPostsForUser().pipe(
       take(1),
       map((posts: Post[]) => {
+        posts.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
         posts.forEach(post => {
           post.content = post.content.substring(0, 300) + '...';
         });

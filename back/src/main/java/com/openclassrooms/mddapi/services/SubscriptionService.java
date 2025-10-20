@@ -20,6 +20,11 @@ public class SubscriptionService {
         this.subscriptionRepository = subscriptionRepository;
     }
 
+    public Iterable<Subscription> findByUserId(Long userId) {
+        return subscriptionRepository.findByUserId(userId);
+    }
+
+
     @Transactional
     public List<SubscriptionDto> getAllSubscriptionsForUser(Long userId) {
         Iterable<Subscription> subscriptions = subscriptionRepository.findByUserId(userId);

@@ -6,9 +6,13 @@ import com.openclassrooms.mddapi.models.Subject;
 import com.openclassrooms.mddapi.models.Subscription;
 import com.openclassrooms.mddapi.models.User;
 import com.openclassrooms.mddapi.repositories.PostRepository;
-import com.openclassrooms.mddapi.repositories.SubscriptionRepository;
+
+import jakarta.transaction.Transactional;
 import lombok.Data;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,15 +23,19 @@ import java.util.Optional;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final SubscriptionRepository subscriptionRepository;
+    private final SubscriptionService subscriptionService;
+    private final UserService userService;
+    private final SubjectService subjectService;
 
-    public PostService(PostRepository postRepository, SubscriptionRepository subscriptionRepository) {
+    public PostService(PostRepository postRepository, SubscriptionService subscriptionService , UserService userService, SubjectService subjectService) {
         this.postRepository = postRepository;
-        this.subscriptionRepository = subscriptionRepository;
+        this.subscriptionService = subscriptionService;
+        this.userService = userService;
+        this.subjectService = subjectService;
     }
 
     public List<PostListDto> getSubscribedPostsForUser(Long userId) {
-        Iterable<Subscription> subscriptions = subscriptionRepository.findByUserId(userId);
+        Iterable<Subscription> subscriptions = subscriptionService.findByUserId(userId);
         List<Long> subjectIds = new ArrayList<>();
         subscriptions.forEach(subscription -> {
            subjectIds.add(subscription.getSubject().getId());
@@ -41,6 +49,35 @@ public class PostService {
         }
 
         return postsListDto;
+    }
+
+    @Transactional
+    public Post createPost(NewPostDto newPostDto, Long userId) {
+        if (newPostDto == null
+                || !StringUtils.hasText(newPostDto.getTitle())
+                || !StringUtils.hasText(newPostDto.getContent())) {
+            throw new IllegalArgumentException("title and content are required to create a post.");
+        }
+
+        User user = this.userService.findById(userId)
+               .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+       Subject subject = this.subjectService.findById(newPostDto.getSubjectId())
+               .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Subject not found"));
+
+       Post post = convertNewPostDtoToPost(newPostDto, user, subject);
+
+       return  postRepository.save(post);
+    }
+
+    private Post convertNewPostDtoToPost(NewPostDto newPostDto, User user, Subject subject) {
+        Post post = new Post();
+        post.setTitle(newPostDto.getTitle());
+        post.setContent(newPostDto.getContent());
+        post.setSubject(subject);
+        post.setUser(user);
+
+        return post;
     }
 
 //    private PostDto convertPostToPostDto(Post post) {

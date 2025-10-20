@@ -52,6 +52,10 @@ public class UserService {
         return userRepository.save(updateUser);
     }
 
+    public Optional<User> findById(Long userId) {
+        return userRepository.findById(userId);
+    }
+
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email.toLowerCase());
     }
