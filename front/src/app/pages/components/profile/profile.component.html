@@ -1,4 +1,4 @@
-<app-title [title]="labelsForInterface.profile" [isRegisterOrLoginPage]="false"></app-title>
+<app-title [title]="labelsForInterface.profile" [typePage]="'profile'"></app-title>
 
 <form [formGroup]="profileForm" class="flex flex-col items-center mt-5">
         <input 
@@ -7,33 +7,22 @@
             class="block w-64 md:w-96 !border !border-black !rounded-lg !px-3 !py-3 focus:!border-blue-500"
             [placeholder]="labelsForInterface.ph_name"
             formControlName="name" />
-        <div class="w-64 md:w-96 h-6 mt-1 flex justify-center items-start">
-            <mat-error *ngIf="getFieldError('name') as error" class="text-red-500 text-sm text-center">
-                {{ error }}
-            </mat-error>
-        </div>
+        <ng-container *ngTemplateOutlet="errorMessage; context: { message: getFieldError('name') }"></ng-container>
         <input 
             matInput 
             type="email" 
             class="block w-64 md:w-96 !border !border-black !rounded-lg !px-3 !py-3 focus:!border-blue-500"
             [placeholder]="labelsForInterface.ph_email" 
             formControlName="email" />
-        <div class="w-64 md:w-96 h-6 mt-1 flex justify-center items-start">
-            <mat-error *ngIf="getFieldError('email') as error" class="text-red-500 text-sm text-center">
-                {{ error }}
-            </mat-error>
-        </div>
+        <ng-container *ngTemplateOutlet="errorMessage; context: { message: getFieldError('email') }"></ng-container>
+        
         <input 
             matInput 
             type="password" 
             class="block w-64 md:w-96 !border !border-black !rounded-lg !px-3 !py-3 focus:!border-blue-500"
             [placeholder]="labelsForInterface.ph_password"
             formControlName="password" />
-        <div class="w-64 md:w-96 h-6 mt-1 flex justify-center items-start">
-            <mat-error *ngIf="getFieldError('password') as error" class="text-red-500 text-sm text-center">
-                {{ error }}
-            </mat-error>
-        </div>
+            <ng-container *ngTemplateOutlet="errorMessage; context: { message: getFieldError('password') }"></ng-container>
     <button 
         mat-raised-button 
         color="primary" 
@@ -50,7 +39,15 @@
 
 <div class="w-[90%] mx-auto mt-4 border-2 border-b border-black"></div>
 
-<app-title [title]="labelsForInterface.subscribes" [isRegisterOrLoginPage]="false"></app-title>
+<app-title [title]="labelsForInterface.subscribes" [typePage]="'profile'"></app-title>
 
 <app-subjects [isProfileView]="true"></app-subjects>
+
+<ng-template #errorMessage let-message ="message">
+    <div class="w-64 md:w-96 h-6 mt-1 flex justify-center items-start">
+        <mat-error *ngIf="message" class="text-red-500 text-sm text-center">
+            {{ message }}
+        </mat-error>
+    </div>
+</ng-template>
 

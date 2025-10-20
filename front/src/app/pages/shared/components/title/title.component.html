@@ -1,17 +1,36 @@
-<ng-container *ngIf="isRegisterOrLoginPage">
+<ng-container *ngIf="typePage === 'registerOrLogin'">
     <div class="w-full flex justify-center mb-10 md:hidden">
         <img src="/assets/logo_p6.png" class="w-96" alt="logo" />
     </div>
 
     <div class="hidden md:block">
         <div class="mt-4 ml-6">
-            <button routerLink="/">
-                <img src="/assets/arrow_back.png" class="w-12" alt="logo"/>
-            </button>
+            <ng-container *ngTemplateOutlet="backButton; context: { route: '/' }"></ng-container>
         </div>
     </div>
 </ng-container>
 
-<div class="flex justify-center relative-top-20" [ngClass]="{'mt-10': !isRegisterOrLoginPage}">
-    <h2 class="!text-3xl">{{ title }}</h2>
-</div>
+<ng-container *ngIf="typePage === 'profile'">
+    <div class="flex justify-center relative-top-20 mt-10">
+        <h2 class="!text-3xl">{{ title }}</h2>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="typePage === 'createPost'">
+    <div class="relative">
+        <div class="mt-6 ml-6 absolute md:relative z-10">
+            <ng-container *ngTemplateOutlet="backButton; context: { route: '/posts' }"></ng-container>
+        </div>
+
+        <div class="flex justify-center relative top-20 mb-24 md:-mb-10 md:-top-8">
+            <h2 class="!text-3xl">{{ title }}</h2>
+        </div>
+    </div>
+</ng-container>
+
+<ng-template #backButton let-route="route">
+    <button [routerLink]="route">
+        <img src="/assets/arrow_back.png" class="w-12" alt="logo"/>
+    </button>
+</ng-template>
+

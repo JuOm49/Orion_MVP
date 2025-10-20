@@ -8,6 +8,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatCardModule } from "@angular/material/card";
+import { MatSelectModule } from "@angular/material/select";
 
 @NgModule({
     exports: [
@@ -19,7 +20,8 @@ import { MatCardModule } from "@angular/material/card";
         MatInputModule,
         MatCheckboxModule,
         MatRadioModule,
-        MatCardModule
+        MatCardModule,
+        MatSelectModule
     ]
 })
 export class SharedMaterialModule {}

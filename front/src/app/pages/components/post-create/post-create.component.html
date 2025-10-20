@@ -1,1 +1,46 @@
-<p>post-create works!</p>
+<app-title [title]="labelsForInterface.profile" [typePage]="'createPost'"></app-title>
+
+
+<form [formGroup]="createPostForm" class="flex flex-col items-center mt-5">
+    <mat-select 
+        [placeholder]="labelsForInterface.selectSubject" 
+        formControlName="subjects"
+        class="w-64 md:w-96 !border !border-black !rounded-lg !px-3 !py-3 focus:!border-blue-500 mb-6">
+        <mat-option *ngFor="let subject of subjects$ | async" [value]="subject.id">{{ subject.title }}</mat-option>
+    </mat-select>
+
+    <input
+        matInput
+        type="text"
+        class="block w-64 md:w-96 !border !border-black !rounded-lg !px-3 !py-3 focus:!border-blue-500"
+        [placeholder]="labelsForInterface.ph_title"
+        formControlName="title" />
+    <ng-container *ngTemplateOutlet="errorMessage; context: { message: getFieldError('title') }"></ng-container>
+
+    <textarea
+        matInput
+        rows="10"
+        class="block w-64 md:w-96 !border !border-black !rounded-lg !px-3 !py-3 focus:!border-blue-500"
+        [placeholder]="labelsForInterface.ph_content"
+        formControlName="content">
+    </textarea>
+    <ng-container *ngTemplateOutlet="errorMessage; context: { message: getFieldError('content') }"></ng-container>
+
+
+    <button
+        mat-raised-button 
+        color="primary"
+        class="w-40 !mt-4"
+        [disabled]="!createPostForm.valid"
+        (click)="onSubmitForm()">
+        {{ labelsForInterface.submit }}
+    </button>
+</form>
+
+<ng-template #errorMessage let-message ="message">
+    <div class="w-64 md:w-96 h-6 mt-1 flex justify-center items-start">
+        <mat-error *ngIf="message" class="text-red-500 text-sm text-center">
+            {{ message }}
+        </mat-error>
+    </div>
+</ng-template>

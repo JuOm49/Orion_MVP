@@ -11,9 +11,9 @@ const routes: Routes = [
 @NgModule({
     declarations: [PostCreateComponent],
     imports: [
-        RouterModule.forChild(routes),
-        SharedPagesModule
-    ],
+    RouterModule.forChild(routes),
+    SharedPagesModule
+],
     exports: []
 })
 export class PostCreateModule {}
