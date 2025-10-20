@@ -1,10 +1,10 @@
 <ng-container *ngIf="post$ | async as post">
-    <div class="mb-4">
+    <div class="ml-4 mr-4 md:ml-20 md:mr-20 mb-4">
         <app-title [typePage]="'post'" [title]="post.title"></app-title>
 
-        <div class="grid grid-cols-3">
-            <span>{{post.updatedAt}}</span>
-            <span>{{post.user.name}}</span>
+        <div class="flex flex-wrap mb-6">
+            <span class="mr-8">{{post.updatedAt | date:'dd/MM/yyyy'}}</span>
+            <span class="mr-8">{{post.user.name}}</span>
             <span>{{post.subject.title}}</span>
         </div>
 
@@ -16,31 +16,31 @@
     <div class="w-[90%] mx-auto mt-4 border-2 border-b border-black"></div>
 
     <div class="mt-4">
-        <h2 class="text-xl font-bold mb-4">{{ labelsForInterface.comments }}</h2>
+        <div class="grid grid-cols-[1fr_3fr]">
+            <h2 class="text-xl text-right font-bold !mb-6 !mr-5">{{ labelsForInterface.comments }}</h2>
+            <div></div>
+        </div>
 
         <div *ngFor="let comment of post.comments" class="mb-6 border-b pb-4">
-            <div class="grid grid-cols-2 mb-2">
-                <span>{{ comment.user.name }}</span>
-                <p>{{comment.message}}</p>
+            <div class="grid md:grid-cols-[1fr_3fr] mb-2">
+                <span class="text-right mr-6">{{ comment.user.name }}</span>
+                <p class="pt-3 px-4 !ml-2 !mr-2 md:!mr-20 rounded-lg bg-gray-200 min-h-20">{{comment.message}}</p>
             </div>
         </div>
     </div>
     <div>
-        <form #messageForm="ngForm" (ngSubmit)="onMessageSubmit(messageForm)">
-            <mat-form-field class="w-full">
-                <textarea 
-                    matInput 
-                    placeholder="{{ labelsForInterface.ph_inputComment }}" 
-                    name="message" 
-                    ngModel 
-                    required
-                    class="!border !border-black !rounded-lg !px-3 !py-3 focus:!border-blue-500">
-                </textarea>
-            </mat-form-field>
+        <form [formGroup]="commentForm" class="grid grid-cols-[5fr_1fr]">
+            <textarea 
+                matInput 
+                placeholder="{{ labelsForInterface.ph_inputComment }}" 
+                formControlName="message"
+                class="ml-2 mb-2 md:ml-20 !border !border-black !rounded-lg !px-3 !py-3 focus:!border-blue-500 min-h-24">
+            </textarea>
             <button 
                 type="submit" 
-                [disabled]="messageForm.invalid">
-                <mat-icon>send</mat-icon>
+                [disabled]="commentForm.invalid"
+                (click)="onMessageSubmit()">
+                <img src="assets/send.png" alt="send" class="w-12 h-12 mx-auto"/>
             </button>
         </form>
     </div>

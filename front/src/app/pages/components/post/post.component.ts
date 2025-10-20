@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Post } from '@app/pages/interfaces/Post.interface';
 
@@ -14,6 +14,7 @@ import { Observable } from 'rxjs';
 export class PostComponent implements OnInit {
   
   post$!: Observable<Post>;
+  commentForm!: FormGroup;
   
   readonly labelsForInterface = {
     comments: 'Commentaires',
@@ -21,18 +22,28 @@ export class PostComponent implements OnInit {
     ph_inputComment: 'Écrire ici votre commentaire',
   };
 
-  constructor(private route: ActivatedRoute, private postService: PostsService) { }
+  constructor(
+    private route: ActivatedRoute, 
+    private postService: PostsService,
+    private formBuilder: FormBuilder
+  ) { }
 
   ngOnInit(): void {
     const postId = Number(this.route.snapshot.params['id']);
     this.post$ = this.postService.getPostById(postId);
+    this.initCommentForm();
   }
 
-  onMessageSubmit(form: NgForm): void {
-    if (form.valid) {
-      if(form.valid) {
-        console.log(form.value.message);
-      }
+  private initCommentForm(): void {
+    this.commentForm = this.formBuilder.group({
+      message: ['', [Validators.required, Validators.minLength(3)]]
+    });
+  }
+
+  onMessageSubmit(): void {
+    if (this.commentForm.valid) {
+      console.log(this.commentForm.value.message);
+      this.commentForm.reset();
     }
   }
 

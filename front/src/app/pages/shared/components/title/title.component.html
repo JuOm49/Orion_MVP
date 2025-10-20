@@ -28,6 +28,18 @@
     </div>
 </ng-container>
 
+<ng-container *ngIf="typePage === 'post'">
+    <div class="grid grid-cols-[auto_1fr]">
+        <div class="mt-6 md:-ml-16 mr-4">
+            <ng-container *ngTemplateOutlet="backButton; context: { route: '/posts' }"></ng-container>
+        </div>
+
+        <div class="mb-10 -ml-2 relative top-4">
+            <h2 class="!text-3xl">{{ title }}</h2>
+        </div>
+    </div>
+</ng-container>
+
 <ng-template #backButton let-route="route">
     <button [routerLink]="route">
         <img src="/assets/arrow_back.png" class="w-12" alt="logo"/>
