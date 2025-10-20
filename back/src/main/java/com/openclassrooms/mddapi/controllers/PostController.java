@@ -5,12 +5,10 @@ import com.openclassrooms.mddapi.DTO.PostListDto;
 import com.openclassrooms.mddapi.services.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -36,4 +34,15 @@ public class PostController {
         return ResponseEntity.ok(postsListDto);
     }
 
+    @PostMapping("/create/post")
+    public ResponseEntity<Map<String, String>> createPost(HttpServletRequest request, @RequestBody PostDto postDto) {
+        Long userId = (Long) request.getAttribute("userId");
+        if(userId == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        // here add logic to create a post using postService
+
+        return ResponseEntity.ok(Map.of("post", "created successfully"));
+    }
 }

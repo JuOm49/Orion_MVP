@@ -8,6 +8,6 @@ export class TitleComponent {
 
   @Input() title!: string;
 
-  @Input() isRegisterOrLoginPage: boolean = true;
+  @Input() typePage!: 'registerOrLogin' | 'createPost' | 'post' | 'profile';
 
 }

@@ -8,7 +8,6 @@ html, body {
  }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-/* Mobile menu material */
 .full-height-menu.mat-menu-panel {
     position: fixed !important;
     top: 0 !important;
@@ -32,6 +31,29 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     font-size: 1.5rem !important;
     margin: 0.2rem 0 !important;
     width: auto !important;
+}
+
+.mat-select {
+    width: auto !important;
+}
+
+/* specific Tailwind width classes for mat-select */
+mat-select.w-64,
+.w-64 mat-select {
+    width: 16rem !important;
+}
+
+mat-select.w-96,
+.w-96 mat-select {
+    width: 24rem !important;
+}
+/****/
+
+@media (min-width: 768px) {
+    mat-select.md\:w-96,
+    .md\:w-96 mat-select {
+        width: 24rem !important;
+    }
 }
 
 @media (max-width: 450px) {
