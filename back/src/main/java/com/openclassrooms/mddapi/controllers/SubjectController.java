@@ -27,7 +27,7 @@ public class SubjectController {
             return ResponseEntity.status(401).build();
         }
 
-        List<SubjectDto> subjectDto = this.subjectService.getAll();
+        List<SubjectDto> subjectDto = this.subjectService.findAll();
         if(subjectDto.isEmpty()) {
             return ResponseEntity.noContent().build();
         }

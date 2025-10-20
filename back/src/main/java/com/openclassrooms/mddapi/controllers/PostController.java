@@ -1,5 +1,6 @@
 package com.openclassrooms.mddapi.controllers;
 
+import com.openclassrooms.mddapi.DTO.NewPostDto;
 import com.openclassrooms.mddapi.DTO.PostDto;
 import com.openclassrooms.mddapi.DTO.PostListDto;
 import com.openclassrooms.mddapi.services.PostService;
@@ -35,14 +36,21 @@ public class PostController {
     }
 
     @PostMapping("/create/post")
-    public ResponseEntity<Map<String, String>> createPost(HttpServletRequest request, @RequestBody PostDto postDto) {
+    public ResponseEntity<Map<String, String>> createPost(HttpServletRequest request, @RequestBody NewPostDto newPostDto) {
         Long userId = (Long) request.getAttribute("userId");
         if(userId == null) {
             return ResponseEntity.status(401).build();
         }
 
-        // here add logic to create a post using postService
-
-        return ResponseEntity.ok(Map.of("post", "created successfully"));
+        try {
+            this.postService.createPost(newPostDto, userId);
+            return ResponseEntity.ok(Map.of("post", "created successfully"));
+        }
+        catch(IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+        catch(Exception ignored) {
+            return ResponseEntity.status(500).body(Map.of("error", "An error occurred while creating the post"));
+        }
     }
 }

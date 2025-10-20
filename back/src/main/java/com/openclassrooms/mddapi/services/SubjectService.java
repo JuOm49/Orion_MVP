@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Data
 @Service
@@ -18,7 +19,11 @@ public class SubjectService {
         this.subjectRepository = subjectRepository;
     }
 
-    public List<SubjectDto> getAll() {
+    public Optional<Subject> findById(Long id) {
+        return subjectRepository.findById(id);
+    }
+
+    public List<SubjectDto> findAll() {
         Iterable<Subject> subjects = subjectRepository.findAll();
 
         List<SubjectDto> subjectsDto = new ArrayList<>();
