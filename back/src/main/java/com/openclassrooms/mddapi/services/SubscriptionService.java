@@ -1,6 +1,7 @@
 package com.openclassrooms.mddapi.services;
 
 import com.openclassrooms.mddapi.DTO.SubscriptionDto;
+import com.openclassrooms.mddapi.exceptions.IllegalArgumentException;
 import com.openclassrooms.mddapi.models.Subscription;
 import com.openclassrooms.mddapi.repositories.SubscriptionRepository;
 import jakarta.transaction.Transactional;
