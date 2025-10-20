@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
+import { FormsModule } from "@angular/forms";
 
 import { PostComponent } from "@pages/components/post/post.component";
 import { SharedPagesModule } from "@pages/shared/shared-pages.module";
@@ -12,7 +13,8 @@ const routes: Routes = [
     declarations: [PostComponent],
     imports: [
         RouterModule.forChild(routes),
-        SharedPagesModule
+        SharedPagesModule,
+        FormsModule
     ],
     exports: []
 })

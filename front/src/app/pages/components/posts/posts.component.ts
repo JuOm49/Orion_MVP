@@ -30,7 +30,6 @@ export class PostsComponent implements OnInit {
   }
 
   clickOnPost(postId: number): void {
-    console.log('Post clicked with ID:', postId);
     this.router.navigate(['/posts', postId]);
   }
 
@@ -53,6 +52,7 @@ export class PostsComponent implements OnInit {
     this.postsService.getSubscribedPostsForUser().pipe(
       take(1),
       map((posts: Post[]) => {
+        if(!posts) return [];
         posts.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
         posts.forEach(post => {
           post.content = post.content.substring(0, 300) + '...';

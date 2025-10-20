@@ -47,7 +47,6 @@ export class PostCreateComponent implements OnInit {
         next: (response) => {
           console.log('Post created successfully:', response);
           this.route.navigate(['/posts']);
-          alert('Article créé avec succès !');
         }, error: (error) => {
           console.error('Error creating post:', error);
         }

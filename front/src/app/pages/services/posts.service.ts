@@ -24,6 +24,17 @@ export class PostsService {
         );
     }
 
+    getPostById(postId: number): Observable<Post> {
+        return this.http.get<Post>(`${environment.apiUrl}/posts/${postId}`).pipe(
+            catchError((error) => {
+                if (error.status === 401 || error.status === 403) {
+                    // Handle 401/403 errors
+                }
+                throw error;
+            })
+        );
+    }
+
 
     //change any response
     createPost(newPost: NewPost) {
