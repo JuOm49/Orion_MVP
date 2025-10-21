@@ -40,13 +40,7 @@ public class UserController {
 
          Authentication authentication = this.authenticationService.handleUsernamePasswordAuthenticationToken(newUser);
 
-        String token = this.jwtService.generateToken(authentication);
-
-        if (token == null || token.isBlank()) {
-            return ResponseEntity.status(500).body(Map.of("error", "Token generation failed"));
-        }
-
-        return ResponseEntity.ok(Map.of( "token", token));
+        return tokenResponse(authentication);
     }
 
     @PostMapping("/login")
@@ -61,13 +55,7 @@ public class UserController {
 
         Authentication authentication = this.authenticationService.handleUsernamePasswordAuthenticationToken(loginUserDto, user);
 
-        String token = this.jwtService.generateToken(authentication);
-
-        if (token == null || token.isBlank()) {
-            return ResponseEntity.status(500).body(Map.of("error", "Token generation failed"));
-        }
-
-        return ResponseEntity.ok(Map.of( "token", token));
+        return tokenResponse(authentication);
     }
 
     @PutMapping("/user")
@@ -86,13 +74,7 @@ public class UserController {
 
         Authentication authentication = this.authenticationService.handleUsernamePasswordAuthenticationToken(updatedUser);
 
-        String token = this.jwtService.generateToken(authentication);
-
-        if (token == null || token.isBlank()) {
-            return ResponseEntity.status(500).body(Map.of("error", "Token generation failed"));
-        }
-
-        return ResponseEntity.ok(Map.of( "token", token));
+        return tokenResponse(authentication);
     }
 
     @GetMapping("/currentUser")
@@ -111,4 +93,13 @@ public class UserController {
         return ResponseEntity.ok(userDto);
     }
 
+    private ResponseEntity<Map<String, String>> tokenResponse(Authentication authentication) {
+        String token = this.jwtService.generateToken(authentication);
+
+        if (token == null || token.isBlank()) {
+            return ResponseEntity.status(500).body(Map.of("error", "Token generation failed"));
+        }
+
+        return ResponseEntity.ok(Map.of( "token", token));
+    }
 }

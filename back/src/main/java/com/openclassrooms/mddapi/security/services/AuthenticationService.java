@@ -1,7 +1,7 @@
 package com.openclassrooms.mddapi.security.services;
 
 import com.openclassrooms.mddapi.DTO.LoginUserDto;
-import lombok.Data;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import com.openclassrooms.mddapi.models.User;
@@ -14,13 +14,12 @@ import com.openclassrooms.mddapi.exceptions.IllegalArgumentException;
 
 import java.util.List;
 
-@Data
 @Service
 public class AuthenticationService {
 
-    private JwtDecoder jwtDecoder;
-    private JWTService jwtService;
-    private UserService userService;
+    private final JwtDecoder jwtDecoder;
+    private final JWTService jwtService;
+    private final UserService userService;
 
     public AuthenticationService(JwtDecoder jwtDecoder, JWTService jwtService, UserService userService) {
         this.jwtDecoder = jwtDecoder;
@@ -85,5 +84,13 @@ public class AuthenticationService {
 
         return this.userService.findByEmail(userMail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    public Long getUserIdFromHttpServletRequest(HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        if (userId == null) {
+            throw new IllegalArgumentException("User is not authenticated.");
+        }
+        return userId;
     }
 }

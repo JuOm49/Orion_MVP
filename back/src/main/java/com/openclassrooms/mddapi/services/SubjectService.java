@@ -3,17 +3,20 @@ package com.openclassrooms.mddapi.services;
 import com.openclassrooms.mddapi.DTO.SubjectDto;
 import com.openclassrooms.mddapi.models.Subject;
 import com.openclassrooms.mddapi.repositories.SubjectRepository;
-import lombok.Data;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Data
 @Service
 public class SubjectService {
     private final SubjectRepository subjectRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public SubjectService(SubjectRepository subjectRepository) {
         this.subjectRepository = subjectRepository;
@@ -31,6 +34,10 @@ public class SubjectService {
             subjectsDto.add(subjectToSubjectDto(subject));
         }
         return subjectsDto;
+    }
+
+    public Subject getReferenceById(Long id) {
+        return entityManager.getReference(Subject.class, id);
     }
 
     private SubjectDto subjectToSubjectDto(Subject subject) {

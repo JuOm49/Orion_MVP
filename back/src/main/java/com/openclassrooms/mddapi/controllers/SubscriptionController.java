@@ -1,9 +1,8 @@
 package com.openclassrooms.mddapi.controllers;
 
 import com.openclassrooms.mddapi.DTO.SubscriptionDto;
-import com.openclassrooms.mddapi.models.Subject;
-import com.openclassrooms.mddapi.models.Subscription;
-import com.openclassrooms.mddapi.models.User;
+import com.openclassrooms.mddapi.exceptions.UnauthorizedException;
+import com.openclassrooms.mddapi.security.services.AuthenticationService;
 import com.openclassrooms.mddapi.services.SubscriptionService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
@@ -17,50 +16,33 @@ import java.util.Map;
 public class SubscriptionController {
 
     private final SubscriptionService subscriptionService;
+    private final AuthenticationService authenticationService;
 
-
-    public SubscriptionController(SubscriptionService subscriptionService) {
+    public SubscriptionController(SubscriptionService subscriptionService, AuthenticationService authenticationService) {
         this.subscriptionService = subscriptionService;
+        this.authenticationService = authenticationService;
     }
 
     @GetMapping("/subscriptions/user")
     public ResponseEntity<List<SubscriptionDto>> getAllSubscriptionsForUser(HttpServletRequest request) {
-        Long userId = (Long) request.getAttribute("userId");
+        Long userId = authenticationService.getUserIdFromHttpServletRequest(request);
 
-        if(userId == null) {
-            return ResponseEntity.status(401).build();
-        }
+        List<SubscriptionDto> subscriptionsDto = subscriptionService.getAllSubscriptionsForUser(userId);
 
-        List<SubscriptionDto> subscriptionDtos = subscriptionService.getAllSubscriptionsForUser(userId);
-
-        if(subscriptionDtos.isEmpty()) {
+        if(subscriptionsDto.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(subscriptionDtos);
+        return ResponseEntity.ok(subscriptionsDto);
     }
 
     @PostMapping("/subscriptions")
     public ResponseEntity<Map<String, String>> subscribeToSubject(HttpServletRequest request, @RequestBody Long subjectId) {
-        Long userId = (Long) request.getAttribute("userId");
-        
-        if(userId == null) {
-            return ResponseEntity.status(401).body(Map.of("error", "Invalid token"));
-        }
+        Long userId = authenticationService.getUserIdFromHttpServletRequest(request);
 
-        User user = new User();
-        user.setId(userId);
-
-        Subject subject = new Subject();
-        subject.setId(subjectId);
-
-        Subscription subscription = new Subscription();
-        subscription.setUser(user);
-        subscription.setSubject(subject);
-
-        SubscriptionDto newSubscriptionDto = subscriptionService.subscribeToSubject(subscription);
-
-        if (newSubscriptionDto.getId() == null) {
-            return ResponseEntity.status(500).body(Map.of("error", "Failed to create subscription"));
+        try {
+            subscriptionService.subscribeToSubject(userId, subjectId);
+        } catch (UnauthorizedException ignored) {
+            return ResponseEntity.status(403).body(Map.of("error", "Unauthorized to subscribe to this subject"));
         }
 
         return ResponseEntity.ok(Map.of("message", "Subscribed successfully"));
@@ -68,10 +50,7 @@ public class SubscriptionController {
 
     @DeleteMapping("/subscriptions/{subjectId}")
     public ResponseEntity<Void> unsubscribeFromSubject(HttpServletRequest request, @PathVariable Long subjectId) {
-        Long userId = (Long) request.getAttribute("userId");
-        if (userId == null) {
-            return ResponseEntity.status(401).build();
-        }
+        Long userId = authenticationService.getUserIdFromHttpServletRequest(request);
 
         subscriptionService.unsubscribeFromSubject(userId, subjectId);
 

@@ -1,6 +1,7 @@
 package com.openclassrooms.mddapi.controllers;
 
 import com.openclassrooms.mddapi.DTO.SubjectDto;
+import com.openclassrooms.mddapi.security.services.AuthenticationService;
 import com.openclassrooms.mddapi.services.SubjectService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
@@ -15,17 +16,16 @@ import java.util.List;
 public class SubjectController {
 
     private final SubjectService subjectService;
+    private final AuthenticationService authenticationService;
 
-    public SubjectController(SubjectService subjectService) {
+    public SubjectController(SubjectService subjectService, AuthenticationService authenticationService) {
         this.subjectService = subjectService;
+        this.authenticationService = authenticationService;
     }
 
     @GetMapping("/subjects")
     public ResponseEntity<Iterable<SubjectDto>> getSubjects(HttpServletRequest request) {
-        Long userId = (Long) request.getAttribute("userId");
-        if (userId == null) {
-            return ResponseEntity.status(401).build();
-        }
+        authenticationService.getUserIdFromHttpServletRequest(request);
 
         List<SubjectDto> subjectDto = this.subjectService.findAll();
         if(subjectDto.isEmpty()) {
