@@ -53,13 +53,13 @@ export class LoginComponent implements OnInit {
         });
         },
         error: (error) => {
-          console.error('Error during login:', error);
-          if (error.status === 401 || error.status === 403) {
+          if ([400, 401, 403].includes(error.status)) {
             this.invalidCredentials = true;
           }
         }
       });
       }
+      this.loginForm.reset();
     }
 
     getFieldError(fieldName: 'identifier' | 'password'): string | null {

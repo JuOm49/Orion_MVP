@@ -72,6 +72,7 @@ export class ProfileComponent implements OnInit {
           }
         });
       }
+      this.profileForm.reset();
     }
 
     getFieldError(fieldName: 'name' | 'email' | 'password'): string | null {

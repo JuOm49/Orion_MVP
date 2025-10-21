@@ -16,7 +16,7 @@ export class SubjectsService {
     getAll(): Observable<SubjectInterface[]> {
         return this.http.get<SubjectInterface[]>(`${environment.apiUrl}/subjects`).pipe(
             catchError((error) => {
-                if (error.status === 401 || error.status === 403) {
+                if ([400, 401, 403].includes(error.status)) {
                     // Handle 401/403 errors
                 }
                 throw error;

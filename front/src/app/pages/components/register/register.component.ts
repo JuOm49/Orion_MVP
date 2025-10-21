@@ -61,6 +61,7 @@ export class RegisterComponent implements OnInit {
         }
       });
     }
+    this.registerForm.reset();
   }
 
   getFieldError(fieldName: 'name' | 'email' | 'password'): string | null {

@@ -8,6 +8,7 @@ import { SubjectsService } from '@pages/services/subjects.service';
 import { PostsService } from '@pages/services/posts.service';
 import { Router } from '@angular/router';
 import { NewPost } from '@app/pages/interfaces/NewPost.interface';
+import { CreatedPostResponse } from '@app/pages/interfaces/CreatedPostResponse.interface';
 
 @Component({
   selector: 'app-post-create',
@@ -44,7 +45,7 @@ export class PostCreateComponent implements OnInit {
       }
 
       this.postsService.createPost(request).pipe(take(1)).subscribe({
-        next: (response) => {
+        next: (response: CreatedPostResponse) => {
           console.log('Post created successfully:', response);
           this.route.navigate(['/posts']);
         }, error: (error) => {
@@ -52,6 +53,7 @@ export class PostCreateComponent implements OnInit {
         }
       });
     }
+    this.createPostForm.reset();
   }
 
   getFieldError(fieldName: 'title' | 'content'): string | null {

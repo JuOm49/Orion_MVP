@@ -49,7 +49,7 @@ export class PostsComponent implements OnInit {
   }
 
   private loadPosts(): void {
-    this.postsService.getSubscribedPostsForUser().pipe(
+    this.postsService.getFeed().pipe(
       take(1),
       map((posts: Post[]) => {
         if(!posts) return [];
