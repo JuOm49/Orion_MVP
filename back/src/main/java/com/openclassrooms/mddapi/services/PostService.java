@@ -8,10 +8,8 @@ import com.openclassrooms.mddapi.repositories.PostRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.Data;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +22,14 @@ public class PostService {
     private final SubscriptionService subscriptionService;
     private final UserService userService;
     private final SubjectService subjectService;
+    private final CommentService commentService;
 
-    public PostService(PostRepository postRepository, SubscriptionService subscriptionService , UserService userService, SubjectService subjectService) {
+    public PostService(PostRepository postRepository, SubscriptionService subscriptionService , UserService userService, SubjectService subjectService, CommentService commentService) {
         this.postRepository = postRepository;
         this.subscriptionService = subscriptionService;
         this.userService = userService;
         this.subjectService = subjectService;
+        this.commentService = commentService;
     }
 
     public List<PostListDto> getSubscribedPostsForUser(Long userId) {
@@ -56,6 +56,11 @@ public class PostService {
         return convertPostToPostDto(post);
     }
 
+    public Iterable<CommentDto> findCommentsByPostId(Long postId) {
+        Iterable<Comment> comments = commentService.findByPostId(postId);
+        return convertCommentsToCommentDtos(comments);
+    }
+
     @Transactional
     public void createPost(NewPostDto newPostDto, Long userId) {
         if (newPostDto == null
@@ -73,6 +78,29 @@ public class PostService {
        Post post = convertNewPostDtoToPost(newPostDto, user, subject);
 
         postRepository.save(post);
+    }
+
+    @Transactional
+    public void addCommentToPost(Long postId, Long userId, String message) {
+        if (!StringUtils.hasText(message)) {
+            throw new IllegalArgumentException("Comment message cannot be empty.");
+        }
+
+        User user = userService.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundException("Post not found"));
+
+        Comment comment = new Comment();
+        comment.setMessage(message);
+        comment.setPost(post);
+        comment.setUser(user);
+
+        // Assuming Post entity has a method to add comments
+        post.getComments().add(comment);
+
+        commentService.saveComment(comment);
     }
 
     private Post convertNewPostDtoToPost(NewPostDto newPostDto, User user, Subject subject) {
@@ -106,18 +134,26 @@ public class PostService {
         userDto.setName(post.getUser().getName());
         postDto.setUserDto(userDto);
 
-        if(post.getComments() != null) {
-            List<CommentDto> commentsDto = new ArrayList<>();
-            post.getComments().forEach(comment -> {
-                commentDto.setId(comment.getId());
-                commentDto.setMessage(comment.getMessage());
-                commentDto.setCreatedAt(comment.getCreatedAt());
-                commentDto.setUpdatedAt(comment.getUpdatedAt());
-                commentDto.setUserDto(setCommentUserToUserDtoForPostDetail(comment));
-                commentsDto.add(commentDto);
-            });
-            postDto.setCommentsDto(commentsDto);
-        }
+        List<CommentDto> commentDtos = new ArrayList<>();
+
+
+        post.getComments().forEach(comment -> {
+            CommentDto commentDto1 = new CommentDto();
+            commentDto1.setId(comment.getId());
+            commentDto1.setMessage(comment.getMessage());
+            commentDto1.setCreatedAt(comment.getCreatedAt());
+            commentDto1.setUpdatedAt(comment.getUpdatedAt());
+
+            UserDto commentUserDto = new UserDto();
+            commentUserDto.setId(comment.getUser().getId());
+            commentUserDto.setName(comment.getUser().getName());
+            commentDto1.setUserDto(commentUserDto);
+
+            commentDtos.add(commentDto1);
+        });
+
+        Iterable<CommentDto> comments = findCommentsByPostId(post.getId());
+        postDto.setCommentsDto((List<CommentDto>) comments);
 
         return postDto;
     }
@@ -138,6 +174,25 @@ public class PostService {
         userDto.setId(comment.getUser().getId());
         userDto.setName(comment.getUser().getName());
         return userDto;
+    }
+
+    private Iterable<CommentDto> convertCommentsToCommentDtos(Iterable<Comment> comments) {
+        List<CommentDto> commentDtos = new ArrayList<>();
+        comments.forEach(comment -> {
+            CommentDto commentDto = new CommentDto();
+            commentDto.setId(comment.getId());
+            commentDto.setMessage(comment.getMessage());
+            commentDto.setCreatedAt(comment.getCreatedAt());
+            commentDto.setUpdatedAt(comment.getUpdatedAt());
+
+            UserDto userDto = new UserDto();
+            userDto.setId(comment.getUser().getId());
+            userDto.setName(comment.getUser().getName());
+            commentDto.setUserDto(userDto);
+
+            commentDtos.add(commentDto);
+        });
+        return commentDtos;
     }
 
     // set Methods for posts list

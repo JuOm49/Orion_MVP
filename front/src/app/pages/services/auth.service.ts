@@ -20,7 +20,7 @@ export class AuthService {
     public saveUser(formValue: RegisterRequest): Observable<AuthSuccess> {
         return this.httpClient.post<AuthSuccess>(`${environment.apiUrl}/register`, formValue).pipe(
             catchError((error) => {
-                if (error.status === 401 || error.status === 403) {
+                if ([400, 401, 403].includes(error.status)) {
                     // Handle 401/403 errors
                 }
                 throw error;
@@ -31,7 +31,7 @@ export class AuthService {
     public updateUser(formValue: RegisterRequest): Observable<AuthSuccess> {
         return this.httpClient.put<AuthSuccess>(`${environment.apiUrl}/user`, formValue).pipe(
             catchError((error) => {
-                if (error.status === 401 || error.status === 403) {
+                if ([400, 401, 403].includes(error.status)) {
                     // Handle 401/403 errors
                 }
                 throw error;
@@ -42,7 +42,7 @@ export class AuthService {
     public loginUser(loginRequest: LoginRequest): Observable<AuthSuccess> {
         return this.httpClient.post<AuthSuccess>(`${environment.apiUrl}/login`, loginRequest).pipe(
             catchError((error) => {
-                if (error.status === 401 || error.status === 403) {
+                if ([400, 401, 403].includes(error.status)) {
                     console.error('Unauthorized or forbidden:', error);
                     
                 }
@@ -54,7 +54,7 @@ export class AuthService {
     public getUser(): Observable<User> {
         return this.httpClient.get<User>(`${environment.apiUrl}/currentUser`).pipe(
             catchError((error) => {
-                if (error.status === 401 || error.status === 403) {
+                if ([400, 401, 403].includes(error.status)) {
                     // Handle 401/403 errors
                 }
                 throw error;

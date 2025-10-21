@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+@ToString(exclude= {"user", "post"})
 @Table(name = "comments")
 public class Comment {
     @Id

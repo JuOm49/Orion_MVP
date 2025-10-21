@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Post } from '@app/pages/interfaces/Post.interface';
+import { Comment as CommentInterface } from '@pages/interfaces/Comment.interface';
+import { Post } from '@pages/interfaces/Post.interface';
 
 import { PostsService } from '@pages/services/posts.service';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, switchMap, map } from 'rxjs';
 
 @Component({
   selector: 'app-post',
@@ -15,22 +16,28 @@ export class PostComponent implements OnInit {
   
   post$!: Observable<Post>;
   commentForm!: FormGroup;
-  
+  commentBehaviorSubject = new BehaviorSubject<CommentInterface[]>([]);
+  postId!: number;
+  useCommentSubject = false;
+
   readonly labelsForInterface = {
     comments: 'Commentaires',
     contentComment: 'Contenu du commentaire',
     ph_inputComment: 'Écrire ici votre commentaire',
   };
 
-  constructor(
-    private route: ActivatedRoute, 
-    private postService: PostsService,
-    private formBuilder: FormBuilder
-  ) { }
+  constructor( private route: ActivatedRoute, private postsService: PostsService, private formBuilder: FormBuilder ) { }
+
+  // Getter pour obtenir les commentaires depuis la bonne source
+  // get comments$(): Observable<CommentInterface[]> {
+  //   return this.useCommentSubject 
+  //     ? this.commentBehaviorSubject.asObservable()
+  //     : this.post$.pipe(map((post: Post) => post?.comments || []));
+  // }
 
   ngOnInit(): void {
-    const postId = Number(this.route.snapshot.params['id']);
-    this.post$ = this.postService.getPostById(postId);
+    this.postId = Number(this.route.snapshot.params['id']);
+    this.post$ = this.postsService.getPostById(this.postId);
     this.initCommentForm();
   }
 
@@ -42,8 +49,21 @@ export class PostComponent implements OnInit {
 
   onMessageSubmit(): void {
     if (this.commentForm.valid) {
-      console.log(this.commentForm.value.message);
-      this.commentForm.reset();
+      const message = this.commentForm.value.message;
+      
+      this.postsService.createMessage(message, this.postId).pipe(
+        switchMap(() => this.postsService.getCommentsForPost(this.postId))
+      ).subscribe({
+        next: (comments: CommentInterface[]) => {
+          console.log('Commentaire créé avec succès');
+          this.useCommentSubject = true; // Basculer vers le BehaviorSubject
+          this.commentBehaviorSubject.next(comments);
+          this.commentForm.reset();
+        },
+        error: (error) => {
+          console.error('Erreur lors de la création du commentaire:', error);
+        }
+      });
     }
   }
 

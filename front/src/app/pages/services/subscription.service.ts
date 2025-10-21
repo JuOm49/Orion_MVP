@@ -16,7 +16,7 @@ export class SubscriptionService {
     getAllSubscribedSubjectsForUser() {
         return this.http.get<subscribeToSubject[]>(`${environment.apiUrl}/subscriptions/user`).pipe(
             catchError((error) => {
-                if (error.status === 401 || error.status === 403) {
+                if ([400, 401, 403].includes(error.status)) {
                     // Handle 401/403 errors
                 }
                 throw error;
@@ -32,7 +32,7 @@ export class SubscriptionService {
                 this.getAllSubscribedSubjectsForUser();
             }),
             catchError((error) => {
-                if (error.status === 401 || error.status === 403) {
+                if ([400, 401, 403].includes(error.status)) {
                     // Handle 401/403 errors
                 }
                 throw error;
@@ -47,7 +47,7 @@ export class SubscriptionService {
                 this.getAllSubscribedSubjectsForUser();
             }),
             catchError((error) => {
-                if (error.status === 401 || error.status === 403) {
+                if ([400, 401, 403].includes(error.status)) {
                     // Handle 401/403 errors
                 }
                 throw error;

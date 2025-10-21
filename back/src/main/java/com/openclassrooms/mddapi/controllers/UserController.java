@@ -56,7 +56,7 @@ public class UserController {
                 .orElse(null);
 
         if(user == null) {
-            return ResponseEntity.status(401).body(Map.of("error", "Invalid credentials"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid credentials"));
         }
 
         Authentication authentication = this.authenticationService.handleUsernamePasswordAuthenticationToken(loginUserDto, user);
