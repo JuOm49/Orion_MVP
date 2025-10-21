@@ -29,9 +29,6 @@ export class PostsService {
 
     getPostById(postId: number): Observable<Post> {
         return this.http.get<Post>(`${environment.apiUrl}/posts/${postId}`).pipe(
-            tap((post) => {
-                console.log('Post récupéré :', post);
-            }),
             catchError((error) => {
                 if ([400, 401, 403].includes(error.status)) {
                     console.error('Error fetching post by ID:', error);

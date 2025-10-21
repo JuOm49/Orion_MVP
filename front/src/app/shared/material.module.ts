@@ -9,7 +9,6 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatCardModule } from "@angular/material/card";
 import { MatSelectModule } from "@angular/material/select";
-import { ErrorComponent } from './components/error/error.component';
 
 @NgModule({
     exports: [
@@ -23,9 +22,6 @@ import { ErrorComponent } from './components/error/error.component';
         MatRadioModule,
         MatCardModule,
         MatSelectModule
-    ],
-    declarations: [
-      ErrorComponent
     ]
 })
 export class SharedMaterialModule {}
