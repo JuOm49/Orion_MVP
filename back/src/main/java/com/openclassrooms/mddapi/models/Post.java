@@ -20,7 +20,7 @@ public class Post {
     @Column(nullable = false, length = 300)
     private String title;
 
-    @Column(nullable = false, length = 8000)
+    @Column(nullable = false, length = 15000)
     private String content;
 
     @CreationTimestamp
@@ -39,6 +39,6 @@ public class Post {
     @JoinColumn(name = "subject_id", nullable = false, foreignKey = @ForeignKey(name= "fk_post_subject"))
     private Subject subject;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 }

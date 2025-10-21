@@ -7,14 +7,12 @@ import com.openclassrooms.mddapi.models.*;
 import com.openclassrooms.mddapi.repositories.PostRepository;
 
 import jakarta.transaction.Transactional;
-import lombok.Data;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Service
 public class PostService {
 
@@ -97,7 +95,6 @@ public class PostService {
         comment.setPost(post);
         comment.setUser(user);
 
-        // Assuming Post entity has a method to add comments
         post.getComments().add(comment);
 
         commentService.saveComment(comment);
@@ -114,46 +111,43 @@ public class PostService {
     }
 
     private PostDto convertPostToPostDto(Post post) {
-        SubjectDto subjectDto = new SubjectDto();
-        CommentDto commentDto = new CommentDto();
-        UserDto userDto = new UserDto();
-        PostDto postDto = new PostDto();
+        if(post == null) {
+            throw new IllegalArgumentException("Post cannot be null.");
+        }
 
+        if(post.getUser() == null) {
+            throw new IllegalArgumentException("Post's user cannot be null.");
+        }
+
+        if(post.getSubject() == null) {
+            throw new IllegalArgumentException("Post's subject cannot be null.");
+        }
+
+        PostDto postDto = new PostDto();
         postDto.setId(post.getId());
         postDto.setTitle(post.getTitle());
         postDto.setContent(post.getContent());
         postDto.setCreatedAt(post.getCreatedAt());
         postDto.setUpdatedAt(post.getUpdatedAt());
 
+        SubjectDto subjectDto = new SubjectDto();
         subjectDto.setId(post.getSubject().getId());
         subjectDto.setTitle(post.getSubject().getTitle());
         subjectDto.setDescription(post.getSubject().getDescription());
         postDto.setSubjectDto(subjectDto);
 
+        UserDto userDto = new UserDto();
         userDto.setId(post.getUser().getId());
         userDto.setName(post.getUser().getName());
         postDto.setUserDto(userDto);
 
-        List<CommentDto> commentDtos = new ArrayList<>();
+        Iterable<CommentDto> allComments = findCommentsByPostId(post.getId());
+        List<CommentDto> commentsDto = new ArrayList<>();
+        if(allComments != null) {
+            allComments.forEach(commentsDto::add);
+        }
 
-
-        post.getComments().forEach(comment -> {
-            CommentDto commentDto1 = new CommentDto();
-            commentDto1.setId(comment.getId());
-            commentDto1.setMessage(comment.getMessage());
-            commentDto1.setCreatedAt(comment.getCreatedAt());
-            commentDto1.setUpdatedAt(comment.getUpdatedAt());
-
-            UserDto commentUserDto = new UserDto();
-            commentUserDto.setId(comment.getUser().getId());
-            commentUserDto.setName(comment.getUser().getName());
-            commentDto1.setUserDto(commentUserDto);
-
-            commentDtos.add(commentDto1);
-        });
-
-        Iterable<CommentDto> comments = findCommentsByPostId(post.getId());
-        postDto.setCommentsDto((List<CommentDto>) comments);
+        postDto.setCommentsDto(commentsDto);
 
         return postDto;
     }

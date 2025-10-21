@@ -20,7 +20,7 @@ export class PostsService {
         return this.http.get<Post[]>(`${environment.apiUrl}/posts/subscribed`).pipe(
             catchError((error) => {
                 if ([400, 401, 403].includes(error.status)) {
-                    // Handle 401/403 errors
+                    console.error('Error fetching subscribed posts for user:', error);
                 }
                 throw error;
             })
@@ -34,7 +34,7 @@ export class PostsService {
             }),
             catchError((error) => {
                 if ([400, 401, 403].includes(error.status)) {
-                    // Handle 401/403 errors
+                    console.error('Error fetching post by ID:', error);
                 }
                 throw error;
             })
@@ -45,7 +45,7 @@ export class PostsService {
         return this.http.get<CommentInterfaces[]>(`${environment.apiUrl}/posts/${postId}/comments`).pipe(
             catchError((error) => {
                 if ([400, 401, 403].includes(error.status)) {
-                    // Handle 401/403 errors
+                    console.error('Error fetching comments:', error);
                 }
                 throw error;
             })

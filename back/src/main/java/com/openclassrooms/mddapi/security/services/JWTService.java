@@ -1,7 +1,5 @@
 package com.openclassrooms.mddapi.security.services;
 
-import lombok.Data;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.*;
@@ -11,7 +9,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
 
-@Data
 @Service
 public class JWTService {
 

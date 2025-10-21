@@ -2,10 +2,8 @@ package com.openclassrooms.mddapi.services;
 
 import com.openclassrooms.mddapi.models.Comment;
 import com.openclassrooms.mddapi.repositories.CommentRepository;
-import lombok.Data;
 import org.springframework.stereotype.Service;
 
-@Data
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;

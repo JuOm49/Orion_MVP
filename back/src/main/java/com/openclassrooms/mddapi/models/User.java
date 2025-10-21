@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Data
-@ToString(exclude = {"posts", "subscriptions", "comments"})
+@ToString(exclude = {"posts", "subscriptions", "comments", "password"})
 @Table(name = "users")
 public class User {
     @Id

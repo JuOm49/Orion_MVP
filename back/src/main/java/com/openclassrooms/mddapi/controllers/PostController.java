@@ -3,6 +3,7 @@ package com.openclassrooms.mddapi.controllers;
 import com.openclassrooms.mddapi.DTO.*;
 import com.openclassrooms.mddapi.exceptions.IllegalArgumentException;
 import com.openclassrooms.mddapi.exceptions.UnauthorizedException;
+import com.openclassrooms.mddapi.security.services.AuthenticationService;
 import com.openclassrooms.mddapi.services.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +17,16 @@ import java.util.Map;
 public class PostController {
 
     private final PostService postService;
+    private final AuthenticationService authenticationService;
 
-    public PostController(PostService postService) {
+    public PostController(PostService postService, AuthenticationService authenticationService) {
         this.postService = postService;
+        this.authenticationService = authenticationService;
     }
 
     @GetMapping("/posts/subscribed")
     public ResponseEntity<Iterable<PostListDto>> getSubscribedPostsForUser(HttpServletRequest request) {
-        Long userId = userIsValid(request);
+        Long userId = authenticationService.getUserIdFromHttpServletRequest(request);
 
         List<PostListDto> postsListDto = this.postService.getSubscribedPostsForUser(userId);
 
@@ -35,7 +38,7 @@ public class PostController {
 
     @GetMapping("posts/{postId}")
     public ResponseEntity<PostDto> findPostById(HttpServletRequest request, @PathVariable Long postId) {
-        userIsValid(request);
+        authenticationService.getUserIdFromHttpServletRequest(request);
 
         PostDto postDto = this.postService.findPostById(postId);
         if(postDto == null) {
@@ -46,9 +49,21 @@ public class PostController {
         }
     }
 
+    @GetMapping("/posts/{postId}/comments")
+    public ResponseEntity<Iterable<CommentDto>> getCommentsForPost(HttpServletRequest request, @PathVariable Long postId) {
+        authenticationService.getUserIdFromHttpServletRequest(request);
+        Iterable<CommentDto> commentsDto = this.postService.findCommentsByPostId(postId);
+
+        if(!commentsDto.iterator().hasNext()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(commentsDto);
+    }
+
     @PostMapping("/posts/create")
     public ResponseEntity<Map<String, String>> createPost(HttpServletRequest request, @RequestBody NewPostDto newPostDto) {
-        Long userId = userIsValid(request);
+        Long userId = authenticationService.getUserIdFromHttpServletRequest(request);
 
         try {
             this.postService.createPost(newPostDto, userId);
@@ -62,21 +77,9 @@ public class PostController {
         }
     }
 
-    @GetMapping("/posts/{postId}/comments")
-    public ResponseEntity<Iterable<CommentDto>> getCommentsForPost(HttpServletRequest request, @PathVariable Long postId) {
-        userIsValid(request);
-        Iterable<CommentDto> commentsDto = this.postService.findCommentsByPostId(postId);
-
-        if(!commentsDto.iterator().hasNext()) {
-            return ResponseEntity.noContent().build();
-        }
-
-        return ResponseEntity.ok(commentsDto);
-    }
-
     @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<Map<String, String>> addCommentToPost(HttpServletRequest request, @PathVariable Long postId, @RequestBody NewMessageDto message) {
-        Long userId = userIsValid(request);
+        Long userId = authenticationService.getUserIdFromHttpServletRequest(request);
 
         try {
             this.postService.addCommentToPost(postId, userId, message.getMessage());
@@ -88,13 +91,5 @@ public class PostController {
         catch(Exception ignored) {
             return ResponseEntity.status(500).body(Map.of("error", "An error occurred while adding the comment"));
         }
-    }
-
-    private Long userIsValid(HttpServletRequest request) {
-        Long userId = (Long) request.getAttribute("userId");
-        if(userId == null) {
-            throw new UnauthorizedException("User is not authenticated.");
-        }
-        return userId;
     }
 }

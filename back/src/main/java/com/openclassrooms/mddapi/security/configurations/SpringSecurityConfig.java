@@ -70,7 +70,7 @@ public class SpringSecurityConfig {
         @Override
         public void addInterceptors(InterceptorRegistry registry) {
             registry.addInterceptor(authByIdInterceptor)
-                    .excludePathPatterns("/api/login", "/api/register", "/api/currentUser")
+                    .excludePathPatterns("/api/login", "/api/register")
                     .addPathPatterns("/api/**");
         }
     }
@@ -93,7 +93,7 @@ public class SpringSecurityConfig {
      */
     @Bean
     public JwtDecoder jwtDecoder() {
-        SecretKeySpec secretKey = new SecretKeySpec(this.jwtSecret.getBytes(), 0, this.jwtSecret.getBytes().length, "RSA");
+        SecretKeySpec secretKey = new SecretKeySpec(this.jwtSecret.getBytes(), 0, this.jwtSecret.getBytes().length, "HmacSHA256");
         return NimbusJwtDecoder.withSecretKey(secretKey).macAlgorithm(MacAlgorithm.HS256).build();
     }
 }

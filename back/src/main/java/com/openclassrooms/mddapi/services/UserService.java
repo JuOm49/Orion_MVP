@@ -4,7 +4,10 @@ import com.openclassrooms.mddapi.DTO.RegisterUserDto;
 import com.openclassrooms.mddapi.DTO.UserDto;
 import com.openclassrooms.mddapi.models.User;
 import com.openclassrooms.mddapi.repositories.UserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.Data;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.openclassrooms.mddapi.exceptions.IllegalArgumentException;
@@ -18,6 +21,9 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -34,14 +40,18 @@ public class UserService {
         }
 
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-
-        return userRepository.save(newUser);
+        try {
+            return userRepository.save(newUser);
+        } catch (DataIntegrityViolationException exception) {
+            throw new IllegalArgumentException("User already exists.", exception);
+        }
     }
 
     public User update(Long userId, RegisterUserDto registerUserDto) {
         User updateUser = registerUserDtoToUser(registerUserDto);
         Optional<User> userFindByEmail = findByEmail(updateUser.getEmail());
         Optional<User> userFindByName = findByName(updateUser.getName());
+
         if(userFindByEmail.isEmpty() && userFindByName.isEmpty()) {
             throw new IllegalArgumentException("User does not exist.");
         }
@@ -50,7 +60,11 @@ public class UserService {
         updateUser.setUpdatedAt(LocalDateTime.now());
         updateUser.setPassword(passwordEncoder.encode(updateUser.getPassword()));
 
-        return userRepository.save(updateUser);
+        try {
+            return userRepository.save(updateUser);
+        } catch (DataIntegrityViolationException exception) {
+            throw new IllegalArgumentException("User update failed.", exception);
+        }
     }
 
     public Optional<User> findById(Long userId) {
@@ -63,6 +77,10 @@ public class UserService {
 
     public Optional<User> findByName(String name) {
         return userRepository.findByName(name);
+    }
+
+    public User getReferenceById(Long userId) {
+        return entityManager.getReference(User.class, userId);
     }
 
     public UserDto convertUserToUserDto(User user) {

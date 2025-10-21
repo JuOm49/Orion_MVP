@@ -2,23 +2,28 @@ package com.openclassrooms.mddapi.services;
 
 import com.openclassrooms.mddapi.DTO.SubscriptionDto;
 import com.openclassrooms.mddapi.exceptions.IllegalArgumentException;
+import com.openclassrooms.mddapi.models.Subject;
 import com.openclassrooms.mddapi.models.Subscription;
+import com.openclassrooms.mddapi.models.User;
 import com.openclassrooms.mddapi.repositories.SubscriptionRepository;
 import jakarta.transaction.Transactional;
-import lombok.Data;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+
 @Service
 public class SubscriptionService {
 
     private final SubscriptionRepository subscriptionRepository;
+    private final UserService userService;
+    private final SubjectService subjectService;
 
-    public SubscriptionService(SubscriptionRepository subscriptionRepository) {
+    public SubscriptionService(SubscriptionRepository subscriptionRepository, UserService userService, SubjectService subjectService) {
         this.subscriptionRepository = subscriptionRepository;
+        this.userService = userService;
+        this.subjectService = subjectService;
     }
 
     public Iterable<Subscription> findByUserId(Long userId) {
@@ -32,11 +37,16 @@ public class SubscriptionService {
        return convertSubscriptionToSubscriptionDto(subscriptions);
     }
 
-    public SubscriptionDto subscribeToSubject(Subscription newSubscription) {
-        Subscription savedSubscription = subscriptionRepository.save(newSubscription);
-        SubscriptionDto subscriptionDto = new SubscriptionDto();
-        subscriptionDto.setId(savedSubscription.getId());
-        return subscriptionDto;
+    @Transactional
+    public void subscribeToSubject(Long userId, Long subjectId) {
+        User user = userService.getReferenceById(userId);
+        Subject subject = subjectService.getReferenceById(subjectId);
+
+        Subscription newSubscription = new Subscription();
+        newSubscription.setUser(user);
+        newSubscription.setSubject(subject);
+
+        subscriptionRepository.save(newSubscription);
     }
 
     @Transactional
