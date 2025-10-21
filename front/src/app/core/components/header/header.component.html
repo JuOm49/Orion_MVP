@@ -1,6 +1,5 @@
 
 <ng-container *ngIf="isLoginOrRegisterPage">
-
     <nav class="hidden md:flex space-x-4 border-b-2 border-black pb-1">
         <img src="/assets/logo_p6.png" alt="logo" class="w-32" />
     </nav>
@@ -15,6 +14,7 @@
 <ng-container *ngIf="!isLoginOrRegisterPage">
     <nav class="flex justify-between items-center border border-b-2 border-solid border-black pb-1 px-2 text-2xl md:px-0">
         <img src="/assets/logo_p6.png" alt="logo" class="w-32" />
+
         <!--desktop menu-->
         <div class="hidden md:flex space-x-4 mr-4">
             <button mat-button class="text-base font-bold text-red-500" (click)="logout()">{{labelsForInterface.logout}}</button>
@@ -27,11 +27,9 @@
 
         <!--mobile menu-->
         <div class="md:hidden">
-
             <button mat-icon-button [matMenuTriggerFor]="appMenu">
                 <mat-icon class="menu-icon">menu</mat-icon>
             </button>
-  
             <mat-menu #appMenu="matMenu" class="full-height-menu">
                 <button mat-menu-item class="text-red-500" (click)="logout()">{{labelsForInterface.logout}}</button>
                 <button mat-menu-item routerLink="/posts" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">{{labelsForInterface.posts}}</button>

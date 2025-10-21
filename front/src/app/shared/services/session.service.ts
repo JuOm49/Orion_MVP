@@ -11,7 +11,13 @@ export class SessionService {
 
     private isLoggedBehaviorSubject = new BehaviorSubject<boolean>(this.isLogged);
 
-    constructor() {}
+    constructor() {
+        const token = localStorage.getItem('token');
+        if (token) {
+            this.isLogged = true;
+        }
+        this.nextLogged();
+    }
 
     public login(user: User): void {
         this.user = user;

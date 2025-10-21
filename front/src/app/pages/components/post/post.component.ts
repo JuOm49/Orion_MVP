@@ -28,13 +28,6 @@ export class PostComponent implements OnInit {
 
   constructor( private route: ActivatedRoute, private postsService: PostsService, private formBuilder: FormBuilder ) { }
 
-  // Getter pour obtenir les commentaires depuis la bonne source
-  // get comments$(): Observable<CommentInterface[]> {
-  //   return this.useCommentSubject 
-  //     ? this.commentBehaviorSubject.asObservable()
-  //     : this.post$.pipe(map((post: Post) => post?.comments || []));
-  // }
-
   ngOnInit(): void {
     this.postId = Number(this.route.snapshot.params['id']);
     this.post$ = this.postsService.getPostById(this.postId);
