@@ -8,8 +8,8 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
   readonly labelsForInterface = {
-    register: 's\'inscrire',
-    login: 'se connecter'
+    register: 'S\'inscrire',
+    login: 'Se connecter'
   }
 
   constructor(private router: Router) {}
