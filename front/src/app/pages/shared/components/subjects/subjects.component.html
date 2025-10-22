@@ -1,0 +1,26 @@
+<div class="list">
+    <div class="subject-grid">
+        <mat-card class="item" *ngFor="let subject of subjects$ | async">
+            <mat-card-header>
+                <mat-card-title>{{ subject.title }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p class="text-justify">{{ subject.description }}</p>
+            </mat-card-content>
+
+            <mat-card-actions>    
+                <div *ngIf="!isProfileView; else profileViewTemplate">
+                    <button mat-raised-button [color]="isSubscribed(subject) ? '' : 'primary'" [class.subscribed-button]="isSubscribed(subject)" (click)="isSubscribed(subject) ? null : subscribeToSubject(subject.id)">
+                        <span>{{ isSubscribed(subject) ? labelsForInterface.alreadySubscribed : labelsForInterface.subscribe }}</span>
+                    </button>
+                </div>
+
+                <ng-template #profileViewTemplate>
+                    <button mat-raised-button color="primary" (click)="unsubscribeFromSubject(subject.id)">
+                        <span>{{ labelsForInterface.unsubscribe }}</span>
+                    </button>
+                </ng-template>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+</div>

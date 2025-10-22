@@ -1,0 +1,33 @@
+.list {
+    margin: 40px;
+
+    .post-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        row-gap: 25px;
+        column-gap: 40px;
+        
+        @media (max-width: 1200px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        @media (max-width: 900px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        @media (max-width: 600px) {
+            grid-template-columns: 1fr;
+        }
+
+        .item {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background-color: #ececec97;
+            box-shadow: none !important;
+            mat-card-content {
+                flex-grow: 1;
+            }
+        }
+    }
+}

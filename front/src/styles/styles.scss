@@ -1,4 +1,65 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-html, body { height: 100%; }
+html, body { 
+    height: 100%;
+ }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.full-height-menu.mat-menu-panel {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    width: 250px !important;
+    height: 100vh !important;
+    max-width: 250px !important;
+    max-height: 100vh !important;
+    border: 2px solid #000 !important;
+}
+
+.mat-menu-content {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    margin-top: 3rem !important;
+}
+
+.mat-menu-item {
+    justify-content: center !important;
+    font-size: 1.5rem !important;
+    margin: 0.2rem 0 !important;
+    width: auto !important;
+}
+
+.mat-select {
+    width: auto !important;
+}
+
+/* specific Tailwind width classes for mat-select */
+mat-select.w-64,
+.w-64 mat-select {
+    width: 16rem !important;
+}
+
+mat-select.w-96,
+.w-96 mat-select {
+    width: 24rem !important;
+}
+/****/
+
+@media (min-width: 768px) {
+    mat-select.md\:w-96,
+    .md\:w-96 mat-select {
+        width: 24rem !important;
+    }
+}
+
+@media (max-width: 450px) {
+    .full-height-menu.mat-menu-panel {
+        width: 180px !important;
+    }
+    .mat-menu-item {
+        font-size: 1.2rem !important;
+    }
+}

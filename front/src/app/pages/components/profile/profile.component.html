@@ -1,0 +1,53 @@
+<app-title [title]="labelsForInterface.profile" [typePage]="'profile'"></app-title>
+
+<form [formGroup]="profileForm" class="flex flex-col items-center mt-5">
+        <input 
+            matInput 
+            type="text" 
+            class="block w-64 sm:w-96 !border-2 !border-[#7763C5] !rounded-lg !px-3 !py-3 focus:!border-blue-500"
+            [placeholder]="labelsForInterface.ph_name"
+            formControlName="name" />
+        <ng-container *ngTemplateOutlet="errorMessage; context: { message: getFieldError('name') }"></ng-container>
+        <input 
+            matInput 
+            type="email" 
+            class="block w-64 sm:w-96 !border-2 !border-[#7763C5] !rounded-lg !px-3 !py-3 focus:!border-blue-500"
+            [placeholder]="labelsForInterface.ph_email" 
+            formControlName="email" />
+        <ng-container *ngTemplateOutlet="errorMessage; context: { message: getFieldError('email') }"></ng-container>
+        
+        <input 
+            matInput 
+            type="password" 
+            class="block w-64 sm:w-96 !border-2 !border-[#7763C5] !rounded-lg !px-3 !py-3 focus:!border-blue-500"
+            [placeholder]="labelsForInterface.ph_password"
+            formControlName="password" />
+            <ng-container *ngTemplateOutlet="errorMessage; context: { message: getFieldError('password') }"></ng-container>
+    <button 
+        mat-raised-button 
+        color="primary" 
+        class="w-36 h-10" 
+        [disabled]="!profileForm.valid"
+        (click)="onSubmitForm()">
+        {{ labelsForInterface.save }}
+    </button>
+</form>
+
+<ng-container *ngIf="invalidCredentials">
+    <app-invalid-credentials [invalidCredentialsMessage]="labelsForInterface.invalidCredentials"></app-invalid-credentials>
+</ng-container>
+
+<div class="w-[90%] mx-auto mt-4 border-2 border-b border-black"></div>
+
+<app-title [title]="labelsForInterface.subscribes" [typePage]="'profile'"></app-title>
+
+<app-subjects [isProfileView]="true"></app-subjects>
+
+<ng-template #errorMessage let-message ="message">
+    <div class="w-64 md:w-96 h-6 mt-1 flex justify-center items-start">
+        <mat-error *ngIf="message" class="text-red-500 text-sm text-center">
+            {{ message }}
+        </mat-error>
+    </div>
+</ng-template>
+

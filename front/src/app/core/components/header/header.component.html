@@ -1,0 +1,43 @@
+
+<ng-container *ngIf="isLoginOrRegisterPage">
+    <nav class="hidden md:flex space-x-4 border-b-2 border-black pb-1">
+        <img src="/assets/logo_p6.png" alt="logo" class="w-32" />
+    </nav>
+
+    <div class="md:hidden mt-8 ml-4 mb-10">
+        <button routerLink="/">
+            <img src="/assets/arrow_back.png" class="w-12" alt="logo"/>
+        </button>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="!isLoginOrRegisterPage">
+    <nav class="flex justify-between items-center border border-b-2 border-solid border-black h-[94px] pb-1 px-2 text-2xl md:px-0">
+        <img src="/assets/logo_p6.png" alt="logo" class="w-36 -mb-2 ml-2" />
+
+        <!--desktop menu-->
+        <div class="hidden md:flex space-x-4 mr-4">
+            <button mat-button class="text-base font-bold text-[#A40F0F] !mr-2" (click)="logout()">{{labelsForInterface.logout}}</button>
+            <button mat-button routerLink="/posts" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">{{labelsForInterface.posts}}</button>
+            <button mat-button routerLink="/subjects" class="!ml-8 !mr-8" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">{{labelsForInterface.subjects}}</button>
+            <button mat-icon-button routerLink="/profile" class="!mr-4">
+                <img src="/assets/profile.png" alt="Profile" class="w-12 h-12 rounded-full">
+            </button>
+        </div>
+
+        <!--mobile menu-->
+        <div class="md:hidden">
+            <button mat-icon-button [matMenuTriggerFor]="appMenu">
+                <mat-icon class="menu-icon">menu</mat-icon>
+            </button>
+            <mat-menu #appMenu="matMenu" class="full-height-menu">
+                <button mat-menu-item class="logout-button" (click)="logout()">{{labelsForInterface.logout}}</button>
+                <button mat-menu-item routerLink="/posts" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">{{labelsForInterface.posts}}</button>
+                <button mat-menu-item routerLink="/subjects" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">{{labelsForInterface.subjects}}</button>
+                <button mat-icon-button routerLink="/profile">
+                    <img src="/assets/profile.png" alt="Profile" class="w-12 h-12 rounded-full position-icon-mobile">
+                </button>
+            </mat-menu>
+        </div>
+    </nav>
+</ng-container>

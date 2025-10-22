@@ -1,0 +1,59 @@
+
+
+<app-title [title]="labelsForInterface.title" [typePage]="'registerOrLogin'"></app-title>
+
+<form [formGroup]="registerForm" class="flex flex-col items-center mt-5">
+    <div class="mb-4">
+        <mat-label class="text-[22px]">{{ labelsForInterface.name }}</mat-label>
+        <input 
+            matInput 
+            type="text" 
+            class="block w-[80vw] md:w-96 h-14 !border !border-black !rounded-lg !px-3 !py-3 text-[18px] focus:!border-blue-500" 
+            formControlName="name" />
+        <div class="w-[80vw] md:w-96 h-6 mt-1 flex justify-center items-start">
+            <mat-error *ngIf="getFieldError('name') as error" class="text-red-500 text-sm text-center">
+                {{ error }}
+            </mat-error>
+        </div>
+    </div>
+    <div class="mb-6">
+        <mat-label class="text-[22px]">{{ labelsForInterface.email }}</mat-label>
+        <input 
+            matInput 
+            type="email" 
+            class="block w-[80vw] md:w-96 h-14 !border !border-black !rounded-lg !px-3 !py-3 text-[18px] focus:!border-blue-500" 
+            formControlName="email" />
+        <div class="w-[80vw] md:w-96 h-6 mt-1 flex justify-center items-start">
+            <mat-error *ngIf="getFieldError('email') as error" class="text-red-500 text-sm text-center">
+                {{ error }}
+            </mat-error>
+        </div>
+    </div>
+    <div class="-mb-2">
+        <mat-label class="text-[22px]">{{ labelsForInterface.password }}</mat-label>
+        <input 
+            matInput 
+            type="password" 
+            class="block w-[80vw] md:w-96 h-14 !border !border-black !rounded-lg !px-3 !py-3 text-[18px] focus:!border-blue-500" 
+            formControlName="password" />
+        <div class="w-[80vw] md:w-96 h-12 mt-1 flex justify-center items-start">
+            <mat-error *ngIf="getFieldError('password') as error" class="text-red-500 text-sm text-center leading-tight">
+                {{ error }}
+            </mat-error>
+        </div>
+    </div>
+    
+    <button 
+        mat-raised-button 
+        color="primary" 
+        class="w-40 h-12 !rounded-lg text-[18px]" 
+        [disabled]="!registerForm.valid"
+        (click)="onSubmitForm()">
+        {{ labelsForInterface.register }}
+    </button>
+</form>
+
+<ng-container *ngIf="invalidCredentials">
+    <app-invalid-credentials [invalidCredentialsMessage]="labelsForInterface.invalidCredentials"></app-invalid-credentials>
+</ng-container>
+

@@ -1,0 +1,26 @@
+<div class="mt-8 mx-10 -mb-6 md:-mb-2 flex flex-col md:flex-row justify-center md:justify-between items-center text-[15px] gap-4">
+    <button mat-raised-button class="!rounded-lg h-12 text-[16px] text-white bg-[#7763C5] w-fit" routerLink="/posts/create">
+        {{ labelsForInterface.createPost }}
+    </button>
+    <div class="cursor-pointer font-bold flex items-center" (click)="clickOnSortBy()">
+        <span class="mr-2">{{ labelsForInterface.sortBy }}</span>
+        <mat-icon>{{ sortByDateAscending ? 'south' : 'north' }}</mat-icon>
+    </div>
+</div>
+
+<div class="list">
+    <div class="post-grid">
+        <mat-card class="item cursor-pointer" *ngFor="let post of posts$ | async" (click)="clickOnPost(post.id)">
+            <mat-card-header>
+                <mat-card-title class="-ml-4">{{ post.title }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="flex gap-8 md:gap-20 mb-3">
+                    <span>{{ post.updatedAt | date:'dd/MM/yyyy' }}</span>
+                    <span>{{ post.user.name }}</span>
+                </div>
+                <p class="text-justify">{{ post.content }}</p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
