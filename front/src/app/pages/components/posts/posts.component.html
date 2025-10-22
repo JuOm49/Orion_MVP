@@ -2,7 +2,7 @@
     <button mat-raised-button class="!rounded-lg h-12 text-[16px] text-white bg-[#7763C5] w-fit" routerLink="/posts/create">
         {{ labelsForInterface.createPost }}
     </button>
-    <div class="cursor-pointer font-bold flex items-center w-fit" (click)="clickOnSortBy()">
+    <div class="cursor-pointer font-bold flex items-center" (click)="clickOnSortBy()">
         <span class="mr-2">{{ labelsForInterface.sortBy }}</span>
         <mat-icon>{{ sortByDateAscending ? 'south' : 'north' }}</mat-icon>
     </div>

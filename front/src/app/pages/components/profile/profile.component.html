@@ -4,14 +4,14 @@
         <input 
             matInput 
             type="text" 
-            class="block w-64 md:w-96 !border !border-black !rounded-lg !px-3 !py-3 focus:!border-blue-500"
+            class="block w-64 sm:w-96 !border-2 !border-[#7763C5] !rounded-lg !px-3 !py-3 focus:!border-blue-500"
             [placeholder]="labelsForInterface.ph_name"
             formControlName="name" />
         <ng-container *ngTemplateOutlet="errorMessage; context: { message: getFieldError('name') }"></ng-container>
         <input 
             matInput 
             type="email" 
-            class="block w-64 md:w-96 !border !border-black !rounded-lg !px-3 !py-3 focus:!border-blue-500"
+            class="block w-64 sm:w-96 !border-2 !border-[#7763C5] !rounded-lg !px-3 !py-3 focus:!border-blue-500"
             [placeholder]="labelsForInterface.ph_email" 
             formControlName="email" />
         <ng-container *ngTemplateOutlet="errorMessage; context: { message: getFieldError('email') }"></ng-container>
@@ -19,14 +19,14 @@
         <input 
             matInput 
             type="password" 
-            class="block w-64 md:w-96 !border !border-black !rounded-lg !px-3 !py-3 focus:!border-blue-500"
+            class="block w-64 sm:w-96 !border-2 !border-[#7763C5] !rounded-lg !px-3 !py-3 focus:!border-blue-500"
             [placeholder]="labelsForInterface.ph_password"
             formControlName="password" />
             <ng-container *ngTemplateOutlet="errorMessage; context: { message: getFieldError('password') }"></ng-container>
     <button 
         mat-raised-button 
         color="primary" 
-        class="w-40" 
+        class="w-36 h-10" 
         [disabled]="!profileForm.valid"
         (click)="onSubmitForm()">
         {{ labelsForInterface.save }}

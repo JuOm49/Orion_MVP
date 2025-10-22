@@ -4,14 +4,14 @@
     <mat-select 
         [placeholder]="labelsForInterface.selectSubject" 
         formControlName="subjects"
-        class="w-64 md:w-96 !border !border-black !rounded-lg !px-3 !py-3 focus:!border-blue-500 mb-6">
+        class="w-64 md:w-96 !border-2 !border-[#7763C5] !rounded-lg !px-3 !py-3 focus:!border-blue-500 mb-6">
         <mat-option *ngFor="let subject of subjects$ | async" [value]="subject.id">{{ subject.title }}</mat-option>
     </mat-select>
 
     <input
         matInput
         type="text"
-        class="block w-64 md:w-96 !border !border-black !rounded-lg !px-3 !py-3 focus:!border-blue-500"
+        class="block w-64 md:w-96 !border-2 !border-[#7763C5] !rounded-lg !px-3 !py-3 focus:!border-blue-500"
         [placeholder]="labelsForInterface.ph_title"
         formControlName="title" />
     <ng-container *ngTemplateOutlet="errorMessage; context: { message: getFieldError('title') }"></ng-container>
@@ -19,7 +19,7 @@
     <textarea
         matInput
         rows="10"
-        class="block w-64 md:w-96 !border !border-black !rounded-lg !px-3 !py-3 focus:!border-blue-500"
+        class="block w-64 xs:w-96 min-h-[212px] !border-2 !border-[#7763C5] !rounded-lg !px-3 !py-3 focus:!border-blue-500"
         [placeholder]="labelsForInterface.ph_content"
         formControlName="content">
     </textarea>
@@ -28,7 +28,7 @@
     <button
         mat-raised-button 
         color="primary"
-        class="w-40 !mt-4"
+        class="w-36 h-10 !mt-4 !rounded-lg"
         [disabled]="!createPostForm.valid"
         (click)="onSubmitForm()">
         {{ labelsForInterface.submit }}
