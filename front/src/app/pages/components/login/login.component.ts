@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
   invalidCredentials: boolean = false;
 
   readonly labelsForInterface = {
-    login: 'se connecter',
+    login: 'Se connecter',
     identifier: 'E-mail ou nom d\'utilisateur',
     password: 'Mot de passe',
     invalidCredentials: 'Identifiant ou mot de passe incorrect'

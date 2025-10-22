@@ -82,13 +82,16 @@ export class SubjectsComponent implements OnInit, OnDestroy {
           take(1),
           map((subjects: SubjectInterface[]) => {
             if(this.isProfileView) {
-              subjects = subjects.filter(subject => safeSubscriptions.some(subscription => subscription.subjectId === subject.id));
+              subjects = subjects.filter(
+                subject => safeSubscriptions.some(subscription => subscription.subjectId === subject.id));
             }
             else {
               subjects.forEach(subject => {
                 subject.subscriptionByUser = safeSubscriptions.find(subscription => subscription.subjectId === subject.id) || null;
+                subject.description = subject.description.substring(0, 200) + '...';
               });
-            } 
+            }
+
             return subjects;
           })
         );

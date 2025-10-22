@@ -24,9 +24,9 @@ export class RegisterComponent implements OnInit {
 
   readonly labelsForInterface = {
     title: 'Inscription',
-    register: 's\'inscrire',
+    register: 'S\'inscrire',
     name: 'Nom d\'utilisateur',
-    email: 'E-mail',
+    email: 'Adresse e-mail',
     password: 'Mot de passe',
     invalidCredentials: 'Inscription impossible avec ces identifiants'
   }

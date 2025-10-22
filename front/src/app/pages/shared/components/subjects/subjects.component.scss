@@ -23,6 +23,7 @@
             flex-direction: column;
             height: 100%;
             background-color: #ececec97;
+            box-shadow: none !important;
 
             mat-card-content {
                 flex-grow: 1;
@@ -30,7 +31,7 @@
 
             mat-card-actions {
                 margin-top: auto;
-                padding: 16px;
+                padding: 2px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
