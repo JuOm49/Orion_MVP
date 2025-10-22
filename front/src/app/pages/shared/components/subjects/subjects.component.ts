@@ -47,11 +47,8 @@ export class SubjectsComponent implements OnInit, OnDestroy {
     this.subscriptionService.subscribeToSubject(subjectId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response) => {
-          console.log('Subscribed successfully:', response);
-        }, error: (error) => {
+        error: (error) => {
           console.error('Error subscribing to subject:', error);
-          // In case of error, revert the state
           this.updateOptimisticSubjectSubscription(subjectId, false);
         }
       });
@@ -64,9 +61,7 @@ export class SubjectsComponent implements OnInit, OnDestroy {
     this.subscriptionService.unsubscribeFromSubject(subjectId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: () => {
-          console.log('Unsubscribed successfully');
-        }, error: (error) => {
+        error: (error) => {
           console.error('Error unsubscribing from subject:', error);
           // In case of error, revert the state
           this.updateOptimisticSubjectSubscription(subjectId, true);

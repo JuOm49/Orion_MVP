@@ -6,7 +6,7 @@ import { PostComponent } from "@pages/components/post/post.component";
 import { SharedPagesModule } from "@pages/shared/shared-pages.module";
 
 const routes: Routes = [
-    { path: '', component: PostComponent}
+    { path: '', component: PostComponent }
 ];
 
 @NgModule({

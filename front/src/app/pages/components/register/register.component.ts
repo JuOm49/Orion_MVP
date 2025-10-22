@@ -9,7 +9,8 @@ import { User } from '@core/interfaces/user.interface';
 import { RegisterRequest } from '@pages/interfaces/RegisterRequest.interface';
 import { AuthService } from '@pages/services/auth.service';
 import { AuthSuccess } from '@pages/interfaces/AuthSuccess.interface';
-import { SessionService } from '@app/shared/services/session.service';
+
+import { SessionService } from '@shared/services/session.service';
 
 @Component({
   selector: 'app-register',

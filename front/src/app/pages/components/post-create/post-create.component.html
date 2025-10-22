@@ -1,6 +1,5 @@
 <app-title [title]="labelsForInterface.profile" [typePage]="'createPost'"></app-title>
 
-
 <form [formGroup]="createPostForm" class="flex flex-col items-center mt-5">
     <mat-select 
         [placeholder]="labelsForInterface.selectSubject" 
@@ -25,7 +24,6 @@
         formControlName="content">
     </textarea>
     <ng-container *ngTemplateOutlet="errorMessage; context: { message: getFieldError('content') }"></ng-container>
-
 
     <button
         mat-raised-button 

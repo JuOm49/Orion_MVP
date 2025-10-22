@@ -1,14 +1,14 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
-import { catchError, Observable, tap } from "rxjs";
-
-import { environment } from "@env/environment";
+import { catchError, Observable} from "rxjs";
 
 import { Post } from "@pages/interfaces/Post.interface";
 import { NewPost } from "@pages/interfaces/NewPost.interface";
 import { CreatedPostResponse } from "@pages/interfaces/CreatedPostResponse.interface";
 import { Comment as CommentInterfaces } from "@pages/interfaces/Comment.interface";
+
+import { environment } from "@env/environment";
 
 @Injectable({
     providedIn: 'root'
@@ -53,7 +53,7 @@ export class PostsService {
         return this.http.post<void>(`${environment.apiUrl}/posts/${postId}/comments`, { message }).pipe(
             catchError((error) => {
                 if ([400, 401, 403].includes(error.status)) {
-                    // Handle 401/403 errors
+                    console.error('Error creating message:', error);
                 }
                 throw error;
             })
@@ -64,7 +64,7 @@ export class PostsService {
         return this.http.post<CreatedPostResponse>(`${environment.apiUrl}/posts/create`, newPost).pipe(
             catchError((error) => {
                 if ([400, 401, 403].includes(error.status)) {
-                    // Handle 401/403 errors
+                    console.error('Error creating post:', error);
                 }
                 throw error;
             })
