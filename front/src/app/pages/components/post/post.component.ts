@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+
+import { BehaviorSubject, Observable, switchMap } from 'rxjs';
+
 import { Comment as CommentInterface } from '@pages/interfaces/Comment.interface';
 import { Post } from '@pages/interfaces/Post.interface';
-
 import { PostsService } from '@pages/services/posts.service';
-import { BehaviorSubject, Observable, switchMap, map } from 'rxjs';
 
 @Component({
   selector: 'app-post',
-  templateUrl: './post.component.html',
-  styleUrls: ['./post.component.scss']
+  templateUrl: './post.component.html'
 })
 export class PostComponent implements OnInit {
   
@@ -48,8 +48,7 @@ export class PostComponent implements OnInit {
         switchMap(() => this.postsService.getCommentsForPost(this.postId))
       ).subscribe({
         next: (comments: CommentInterface[]) => {
-          console.log('Commentaire créé avec succès');
-          this.useCommentSubject = true; // Basculer vers le BehaviorSubject
+          this.useCommentSubject = true;
           this.commentBehaviorSubject.next(comments);
           this.commentForm.reset();
         },

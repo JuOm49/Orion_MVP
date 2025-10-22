@@ -1,19 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
-import { Observable, pipe, take } from 'rxjs';
+import { Observable, take } from 'rxjs';
 
 import { Subject as SubjectInterface } from '@pages/interfaces/Subject.interface';
 import { SubjectsService } from '@pages/services/subjects.service';
 import { PostsService } from '@pages/services/posts.service';
-import { Router } from '@angular/router';
-import { NewPost } from '@app/pages/interfaces/NewPost.interface';
-import { CreatedPostResponse } from '@app/pages/interfaces/CreatedPostResponse.interface';
+import { NewPost } from '@pages/interfaces/NewPost.interface';
+import { CreatedPostResponse } from '@pages/interfaces/CreatedPostResponse.interface';
 
 @Component({
   selector: 'app-post-create',
-  templateUrl: './post-create.component.html',
-  styleUrls: ['./post-create.component.scss']
+  templateUrl: './post-create.component.html'
 })
 export class PostCreateComponent implements OnInit {
 
@@ -45,8 +44,7 @@ export class PostCreateComponent implements OnInit {
       }
 
       this.postsService.createPost(request).pipe(take(1)).subscribe({
-        next: (response: CreatedPostResponse) => {
-          console.log('Post created successfully:', response);
+        next: () => {
           this.route.navigate(['/posts']);
         }, error: (error) => {
           console.error('Error creating post:', error);

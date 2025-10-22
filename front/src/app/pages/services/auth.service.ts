@@ -3,12 +3,13 @@ import { HttpClient } from "@angular/common/http";
 
 import { catchError, Observable } from "rxjs";
 
-import { environment } from "@env/environment";
+import { User } from "@core/interfaces/user.interface";
 
 import { RegisterRequest } from "@pages/interfaces/RegisterRequest.interface";
 import { AuthSuccess } from "@pages/interfaces/AuthSuccess.interface";
 import { LoginRequest } from "@pages/interfaces/LoginRequest.interface";
-import { User } from "@app/core/interfaces/user.interface";
+
+import { environment } from "@env/environment";
 
 @Injectable(
     { providedIn: 'root' }

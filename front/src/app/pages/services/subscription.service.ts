@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
-import { catchError, take, tap } from "rxjs";
+import { catchError, Observable, take } from "rxjs";
 
 import { Subscription as subscribeToSubject } from "@pages/interfaces/Subscription.interface";
 
@@ -13,11 +13,11 @@ import { environment } from "@env/environment";
 export class SubscriptionService {
     constructor(private http: HttpClient) { }
 
-    getAllSubscribedSubjectsForUser() {
+    getAllSubscribedSubjectsForUser(): Observable<subscribeToSubject[]> {
         return this.http.get<subscribeToSubject[]>(`${environment.apiUrl}/subscriptions/user`).pipe(
             catchError((error) => {
                 if ([400, 401, 403].includes(error.status)) {
-                    // Handle 401/403 errors
+                    console.error('Error fetching subscribed subjects:', error);
                 }
                 throw error;
             })
@@ -25,15 +25,12 @@ export class SubscriptionService {
     }
 
 
-    subscribeToSubject(subjectId: number) {
+    subscribeToSubject(subjectId: number): Observable<subscribeToSubject> {
         return this.http.post<subscribeToSubject>(`${environment.apiUrl}/subscriptions`, subjectId).pipe(
             take(1),
-            tap(() => {
-                this.getAllSubscribedSubjectsForUser();
-            }),
             catchError((error) => {
                 if ([400, 401, 403].includes(error.status)) {
-                    // Handle 401/403 errors
+                    console.error('Error subscribing to subject:', error);
                 }
                 throw error;
             })
@@ -43,12 +40,9 @@ export class SubscriptionService {
     unsubscribeFromSubject(subjectId: number) {
         return this.http.delete(`${environment.apiUrl}/subscriptions/${subjectId}`).pipe(
             take(1),
-            tap(() => {
-                this.getAllSubscribedSubjectsForUser();
-            }),
             catchError((error) => {
                 if ([400, 401, 403].includes(error.status)) {
-                    // Handle 401/403 errors
+                    console.error('Error unsubscribing from subject:', error);
                 }
                 throw error;
             })
