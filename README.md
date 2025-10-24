@@ -12,7 +12,7 @@ After cloning the repository, you'll find two main folders
       ─ backend/   → Spring Boot API
       ─ frontend/  → Angular application
 
-## 2. Backend Setup (Spring Boot
+## 2. Backend Setup (Spring Boot)
 Before running the API, configure your environment variables in "/src/main/resources/application.properties". Use placeholders to avoid hardcoding sensitive data:
     
     spring.application.name=Orion
