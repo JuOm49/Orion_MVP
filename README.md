@@ -35,13 +35,10 @@ Before running the API, configure your environment variables in "/src/main/resou
 
 #### Run the API
 
-From the backend folder, run:
-
-    ./mvnw spring-boot:run
-
-Or with Maven installed:
-
-    mvn spring-boot:run
+    mvn clean install
+   
+   To launch the application, open the project in your IDE (e.g., IntelliJ) and locate the "MddApiApplication" class.
+   From there, click the green Run button next to the main() method or use the IDE's run menu to execute "MddApiApplication". This will start the Spring Boot application locally.
 
 The API will start on http://localhost:9000.
 
@@ -70,15 +67,3 @@ install dependencies
 #### Build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-
-## 4. Run the API
-   
-    mvn clean install
-   
-   To launch the application, open the project in your IDE (e.g., IntelliJ) and locate the "MddApiApplication" class.
-   From there, click the green Run button next to the main() method or use the IDE's run menu to execute "MddApiApplication". This will start the Spring Boot application locally.
-
-
-
-
