@@ -37,6 +37,7 @@ export class PostsComponent implements OnInit {
     const currentPosts = this.postsBehaviorSubject.value;
     let sortedPosts: Post[] = [];
     
+    // Toggle sorting order based on updatedAt date
     if (this.sortByDateAscending) {
       sortedPosts = [...currentPosts].sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime());
       this.sortByDateAscending = false;
@@ -53,6 +54,7 @@ export class PostsComponent implements OnInit {
       take(1),
       map((posts: Post[]) => {
         if(!posts) return [];
+        // Sort posts by updatedAt date descending
         posts.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
         posts.forEach(post => {
           post.content = post.content.substring(0, 300) + '...';
