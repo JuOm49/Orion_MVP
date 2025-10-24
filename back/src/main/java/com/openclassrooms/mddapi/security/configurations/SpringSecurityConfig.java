@@ -28,6 +28,10 @@ import javax.crypto.spec.SecretKeySpec;
 @EnableWebSecurity
 public class SpringSecurityConfig {
 
+    /**
+     * The secret key used for JWT token signing and validation.
+     * This value is injected from the application.properties file using the "jwt.secret" property.
+     */
     @Value("${jwt.secret}")
     private String jwtSecret;
 
@@ -52,12 +56,24 @@ public class SpringSecurityConfig {
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())).build();
     }
 
+    /**
+     * Web configuration class that implements WebMvcConfigurer to customize Spring MVC behavior.
+     * Configures CORS mappings for cross-origin requests and registers the authentication interceptor
+     * to handle JWT validation and user ID extraction for protected endpoints.
+     */
     @Configuration
     public class WebConfig implements WebMvcConfigurer {
 
         @Autowired
         private AuthByIdInterceptor authByIdInterceptor;
 
+        /**
+         * Configures CORS (Cross-Origin Resource Sharing) mappings for the API endpoints.
+         * Allows requests from the Angular frontend running on localhost:4200 with
+         * credentials and all standard HTTP methods.
+         *
+         * @param registry the CorsRegistry to configure CORS mappings
+         */
         @Override
         public void addCorsMappings(CorsRegistry registry) {
             registry.addMapping("/api/**")
@@ -67,6 +83,13 @@ public class SpringSecurityConfig {
                     .allowCredentials(true);
         }
 
+        /**
+         * Registers the authentication interceptor to handle JWT validation and user ID extraction.
+         * The interceptor is applied to all API endpoints except login and register endpoints
+         * which are publicly accessible.
+         *
+         * @param registry the InterceptorRegistry to register interceptors
+         */
         @Override
         public void addInterceptors(InterceptorRegistry registry) {
             registry.addInterceptor(authByIdInterceptor)
@@ -86,10 +109,12 @@ public class SpringSecurityConfig {
     }
 
     /**
-     * Configures a JwtDecoder bean using the provided JWT secret.
-     * The decoder is set up to use the HS256 algorithm for decoding JWT tokens.
-     * "RSA" is used in SecretKeySpec but the actual algorithm for JWT is HS256. it's a symmetric key algorithm.
-     * @return the configured JwtDecoder
+     * Creates and configures a JwtDecoder bean for JWT token validation.
+     * Uses HMAC SHA-256 algorithm with the application's secret key to decode and validate
+     * JWT tokens received from clients. This decoder is used by Spring Security's
+     * OAuth2 resource server configuration for authentication.
+     *
+     * @return a configured NimbusJwtDecoder instance using HS256 algorithm
      */
     @Bean
     public JwtDecoder jwtDecoder() {
