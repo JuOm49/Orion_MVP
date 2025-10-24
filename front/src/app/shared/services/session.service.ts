@@ -4,6 +4,7 @@ import { BehaviorSubject } from "rxjs";
 
 import { User } from "@core/interfaces/user.interface";
 
+// Service to manage user session state and authentication status
 @Injectable({
     providedIn: "root"
 })

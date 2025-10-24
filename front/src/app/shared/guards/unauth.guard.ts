@@ -8,6 +8,7 @@ export class UnauthGuard implements CanActivate {
     
     constructor(private router: Router, private sessionService: SessionService) {}
 
+    // Guard to protect routes that should be inaccessible to authenticated users
     public canActivate(): boolean {
         if(this.sessionService.isLogged) {
             this.router.navigate(['posts']);
