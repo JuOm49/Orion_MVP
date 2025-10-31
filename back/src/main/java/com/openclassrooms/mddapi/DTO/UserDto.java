@@ -7,6 +7,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data Transfer Object used by controllers to send and receive user payloads
+ * between the API and the front-end.
+ *
+ * <p>Contains core user fields and collections of related comments,
+ * subscriptions, and posts for efficient serialization in REST endpoints.
+ * Input validation and persistence are handled by other layers.</p>
+ */
 @Data
 public class UserDto {
     private Long id;

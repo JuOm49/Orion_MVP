@@ -1,7 +1,6 @@
 package com.openclassrooms.mddapi.controllers;
 
 import com.openclassrooms.mddapi.DTO.*;
-import com.openclassrooms.mddapi.exceptions.IllegalArgumentException;
 import com.openclassrooms.mddapi.security.services.AuthenticationService;
 import com.openclassrooms.mddapi.services.PostService;
 import jakarta.servlet.http.HttpServletRequest;

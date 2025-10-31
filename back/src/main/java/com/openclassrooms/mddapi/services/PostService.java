@@ -1,8 +1,6 @@
 package com.openclassrooms.mddapi.services;
 
 import com.openclassrooms.mddapi.DTO.*;
-import com.openclassrooms.mddapi.exceptions.IllegalArgumentException;
-import com.openclassrooms.mddapi.exceptions.NotFoundException;
 import com.openclassrooms.mddapi.models.*;
 import com.openclassrooms.mddapi.repositories.PostRepository;
 
@@ -12,7 +10,16 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
+/**
+ * Service responsible for managing posts, including creation, retrieval and conversion
+ * between entity models and DTOs used by the application.
+ *
+ * <p>This service uses {@code PostRepository} for persistence and collaborates with
+ * {@code SubscriptionService}, {@code UserService}, {@code SubjectService} and
+ * {@code CommentService} to obtain related entities and perform operations.</p>
+ */
 @Service
 public class PostService {
 
@@ -22,6 +29,15 @@ public class PostService {
     private final SubjectService subjectService;
     private final CommentService commentService;
 
+    /**
+     * Construct a new {@code PostService}.
+     *
+     * @param postRepository repository used to persist and query {@code Post} entities
+     * @param subscriptionService service used to query user subscriptions
+     * @param userService service used to retrieve user entities
+     * @param subjectService service used to retrieve subject entities
+     * @param commentService service used to manage comments
+     */
     public PostService(PostRepository postRepository, SubscriptionService subscriptionService , UserService userService, SubjectService subjectService, CommentService commentService) {
         this.postRepository = postRepository;
         this.subscriptionService = subscriptionService;
@@ -30,6 +46,16 @@ public class PostService {
         this.commentService = commentService;
     }
 
+    /**
+     * Retrieve posts for subjects to which the specified user is subscribed.
+     *
+     * <p>The method collects the subject ids from the user's subscriptions and uses the
+     * repository to find posts belonging to those subjects, then converts each post to
+     * a {@code PostListDto}.</p>
+     *
+     * @param userId identifier of the user
+     * @return a {@code List} of {@code PostListDto} for the user's subscribed subjects
+     */
     public List<PostListDto> getSubscribedPostsForUser(Long userId) {
         Iterable<Subscription> subscriptions = subscriptionService.findByUserId(userId);
         List<Long> subjectIds = new ArrayList<>();
@@ -47,18 +73,42 @@ public class PostService {
         return postsListDto;
     }
 
+    /**
+     * Find a post by its identifier and convert it to {@code PostDto}.
+     *
+     * @param postId identifier of the post
+     * @return a {@code PostDto} representing the post
+     * @throws NoSuchElementException if the post does not exist
+     */
     public PostDto findPostById(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new NotFoundException("Post not found"));
+                .orElseThrow(() -> new NoSuchElementException("Post not found"));
 
         return convertPostToPostDto(post);
     }
 
+    /**
+     * Retrieve comments for a specific post and convert them to DTOs.
+     *
+     * @param postId identifier of the post
+     * @return an {@code Iterable} of {@code CommentDto} for the post
+     */
     public Iterable<CommentDto> findCommentsByPostId(Long postId) {
         Iterable<Comment> comments = commentService.findByPostId(postId);
         return convertCommentsToCommentDtos(comments);
     }
 
+    /**
+     * Create a new post authored by the specified user.
+     *
+     * <p>The method validates input fields, verifies that the user and subject exist,
+     * converts the DTO to an entity and persists it.</p>
+     *
+     * @param newPostDto DTO containing new post data
+     * @param userId identifier of the authoring user
+     * @throws IllegalArgumentException if required fields are missing
+     * @throws NoSuchElementException if the user or subject cannot be found
+     */
     @Transactional
     public void createPost(NewPostDto newPostDto, Long userId) {
         if (newPostDto == null
@@ -68,16 +118,28 @@ public class PostService {
         }
 
         User user = this.userService.findById(userId)
-               .orElseThrow(()-> new NotFoundException("User not found"));
+               .orElseThrow(()-> new NoSuchElementException("User not found"));
 
        Subject subject = this.subjectService.findById(newPostDto.getSubjectId())
-               .orElseThrow(()-> new NotFoundException("Subject not found"));
+               .orElseThrow(()-> new NoSuchElementException("Subject not found"));
 
        Post post = convertNewPostDtoToPost(newPostDto, user, subject);
 
         postRepository.save(post);
     }
 
+    /**
+     * Add a new comment to an existing post.
+     *
+     * <p>The method validates the message, ensures the user and post exist, creates
+     * a new {@code Comment} entity and persists it via {@code CommentService}.</p>
+     *
+     * @param postId identifier of the post to comment on
+     * @param userId identifier of the commenting user
+     * @param message text of the comment
+     * @throws IllegalArgumentException if the message is empty
+     * @throws NoSuchElementException if the user or post cannot be found
+     */
     @Transactional
     public void addCommentToPost(Long postId, Long userId, String message) {
         if (!StringUtils.hasText(message)) {
@@ -85,10 +147,10 @@ public class PostService {
         }
 
         User user = userService.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not found"));
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new NotFoundException("Post not found"));
+                .orElseThrow(() -> new NoSuchElementException("Post not found"));
 
         Comment comment = new Comment();
         comment.setMessage(message);
@@ -100,6 +162,14 @@ public class PostService {
         commentService.saveComment(comment);
     }
 
+    /**
+     * Convert a {@code NewPostDto} to a {@code Post} entity using provided user and subject.
+     *
+     * @param newPostDto DTO containing post fields
+     * @param user authoring user entity
+     * @param subject subject entity associated with the post
+     * @return a new {@code Post} entity ready for persistence
+     */
     private Post convertNewPostDtoToPost(NewPostDto newPostDto, User user, Subject subject) {
         Post post = new Post();
         post.setTitle(newPostDto.getTitle());
@@ -110,6 +180,14 @@ public class PostService {
         return post;
     }
 
+    /**
+     * Convert a {@code Post} entity to a detailed {@code PostDto}, including subject,
+     * user summary and comments.
+     *
+     * @param post the {@code Post} entity to convert
+     * @return a {@code PostDto} with populated fields and nested DTOs
+     * @throws IllegalArgumentException if the post or required associations are null
+     */
     private PostDto convertPostToPostDto(Post post) {
         if(post == null) {
             throw new IllegalArgumentException("Post cannot be null.");
@@ -152,6 +230,12 @@ public class PostService {
         return postDto;
     }
 
+    /**
+     * Convert a {@code Post} to a compact {@code PostListDto} used for listing pages.
+     *
+     * @param post the {@code Post} entity to convert
+     * @return a {@code PostListDto} with summary fields, user and subject info
+     */
     private PostListDto convertPostToPostListDto(Post post) {
         PostListDto postListDto = new PostListDto();
 
@@ -163,6 +247,12 @@ public class PostService {
     }
 
     //set Method for post detail
+    /**
+     * Map the comment's user to a {@code UserDto} used inside post detail responses.
+     *
+     * @param comment the {@code Comment} whose user will be converted
+     * @return a {@code UserDto} with the comment author summary
+     */
     private UserDto setCommentUserToUserDtoForPostDetail(Comment comment) {
         UserDto userDto = new UserDto();
         userDto.setId(comment.getUser().getId());
@@ -170,6 +260,12 @@ public class PostService {
         return userDto;
     }
 
+    /**
+     * Convert an iterable of {@code Comment} entities to {@code CommentDto} instances.
+     *
+     * @param comments iterable collection of comment entities
+     * @return an {@code Iterable} of {@code CommentDto} with user info included
+     */
     private Iterable<CommentDto> convertCommentsToCommentDtos(Iterable<Comment> comments) {
         List<CommentDto> commentDtos = new ArrayList<>();
         comments.forEach(comment -> {
@@ -190,6 +286,12 @@ public class PostService {
     }
 
     // set Methods for posts list
+    /**
+     * Populate basic fields of {@code PostListDto} from a {@code Post} entity.
+     *
+     * @param post source {@code Post} entity
+     * @param postListDto target {@code PostListDto} to populate
+     */
     private void setPostListDtoFromPost(Post post, PostListDto postListDto) {
         postListDto.setId(post.getId());
         postListDto.setTitle(post.getTitle());
@@ -197,6 +299,12 @@ public class PostService {
         postListDto.setUpdatedAt(post.getUpdatedAt());
     }
 
+    /**
+     * Create a {@code UserForPostListDto} from a {@code User} entity for listing contexts.
+     *
+     * @param user source {@code User} entity
+     * @return a {@code UserForPostListDto} with id and name populated
+     */
     private UserForPostListDto setUserDtoForPostsList(User user) {
         UserForPostListDto userForPostListDtoDto = new UserForPostListDto();
         userForPostListDtoDto.setId(user.getId());
@@ -204,6 +312,12 @@ public class PostService {
         return userForPostListDtoDto;
     }
 
+    /**
+     * Create a {@code SubjectForPostListDto} from a {@code Subject} entity for listing contexts.
+     *
+     * @param subject source {@code Subject} entity
+     * @return a {@code SubjectForPostListDto} with id populated
+     */
     private SubjectForPostListDto setSubjectForPostListDto(Subject subject) {
         SubjectForPostListDto subjectForPostListDto = new SubjectForPostListDto();
         subjectForPostListDto.setId(subject.getId());
