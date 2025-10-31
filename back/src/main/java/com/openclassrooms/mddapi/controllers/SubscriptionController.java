@@ -1,7 +1,6 @@
 package com.openclassrooms.mddapi.controllers;
 
 import com.openclassrooms.mddapi.DTO.SubscriptionDto;
-import com.openclassrooms.mddapi.exceptions.UnauthorizedException;
 import com.openclassrooms.mddapi.security.services.AuthenticationService;
 import com.openclassrooms.mddapi.services.SubscriptionService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -68,7 +67,7 @@ public class SubscriptionController {
 
         try {
             subscriptionService.subscribeToSubject(userId, subjectId);
-        } catch (UnauthorizedException ignored) {
+        } catch (IllegalArgumentException ignored) {
             return ResponseEntity.status(403).body(Map.of("error", "Unauthorized to subscribe to this subject"));
         }
 
